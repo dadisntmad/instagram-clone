@@ -1,0 +1,28 @@
+@import '../../scss/variables.scss';
+
+.search {
+  position: relative;
+
+  .searchIcon {
+    position: absolute;
+    top: 9px;
+    left: 7px;
+  }
+
+  .searchInput {
+    width: 268px;
+    height: 36px;
+    padding: 0px 32px;
+    background: $searchInputColor;
+    border: none;
+    outline: none;
+    border-radius: 8px;
+  }
+
+  .cancelIcon {
+    position: absolute;
+    top: 9px;
+    right: 7px;
+    cursor: pointer;
+  }
+}

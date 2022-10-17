@@ -1,0 +1,26 @@
+@import '../../scss/mixins.scss';
+@import '../../scss/variables.scss';
+
+.root {
+  background: white;
+  border-bottom: 1px solid $borderColor;
+}
+
+.container {
+  @include container;
+}
+.header {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 13px 0;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+
+  div {
+    margin-left: 20px;
+  }
+}
