@@ -1,11 +1,59 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useAppDispatch } from '../../redux/store';
+import { useSelector } from 'react-redux';
+import { selectAuth } from '../../selectors/selectors';
+import { setEmail, setFullName, setPassword, setUsername } from '../../redux/slices/auth';
+import { auth, db } from '../../firebase';
+import { User } from '../../types/user';
 
 import logo from '../../assets/logo.png';
 
 import styles from './SignUp.module.scss';
 
 export const SignUp: React.FC = () => {
+  const dispatch = useAppDispatch();
+
+  const { email, fullName, username, password } = useSelector(selectAuth);
+
+  const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setEmail(e.target.value));
+  };
+
+  const onFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setFullName(e.target.value));
+  };
+
+  const onUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setUsername(e.target.value));
+  };
+
+  const onPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setPassword(e.target.value));
+  };
+
+  const signUp = () => {
+    auth
+      .createUserWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        const data: User = {
+          uid: userCredential.user?.uid,
+          email,
+          fullName,
+          username,
+          imageUrl: '',
+          bio: '',
+          following: [],
+          followers: [],
+        };
+
+        db.collection('users').doc(userCredential.user?.uid).set(data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   return (
     <div className={styles.root}>
       <div className={styles.main}>
@@ -14,19 +62,45 @@ export const SignUp: React.FC = () => {
         </div>
         <div className={styles.form}>
           <div>
-            <input className={styles.formInput} type="text" placeholder="Email" />
+            <input
+              className={styles.formInput}
+              type="text"
+              placeholder="Email"
+              value={email}
+              onChange={onEmailChange}
+            />
           </div>
           <div>
-            <input className={styles.formInput} type="text" placeholder="Full Name" />
+            <input
+              className={styles.formInput}
+              type="text"
+              placeholder="Full Name"
+              value={fullName}
+              onChange={onFullNameChange}
+            />
           </div>
           <div>
-            <input className={styles.formInput} type="text" placeholder="Username" />
+            <input
+              className={styles.formInput}
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={onUsernameChange}
+            />
           </div>
           <div>
-            <input className={styles.formInput} type="password" placeholder="Password" />
+            <input
+              className={styles.formInput}
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={onPasswordChange}
+            />
           </div>
           <div>
-            <button className={styles.formButton}>Sign up</button>
+            <button className={styles.formButton} onClick={signUp}>
+              Sign up
+            </button>
           </div>
         </div>
       </div>
