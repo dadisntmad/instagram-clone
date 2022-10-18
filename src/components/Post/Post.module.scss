@@ -1,0 +1,149 @@
+@import '../../scss/variables.scss';
+
+.root {
+  max-width: 470px;
+  min-height: 500px;
+  background: white;
+  border: 1px solid $borderColor;
+  border-radius: 8px;
+  margin-bottom: 14px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px;
+
+  .headerUsername {
+    display: flex;
+    align-items: center;
+
+    p {
+      margin-left: 8px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+  }
+
+  button {
+    border: none;
+    outline: none;
+    background: none;
+    cursor: pointer;
+
+    img {
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+.image {
+  width: 469px;
+  height: 585px;
+  object-fit: cover;
+  margin-bottom: 5px;
+}
+
+.footer {
+  .footerActions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 0 14px;
+  }
+
+  .footerButtons {
+    button {
+      border: none;
+      outline: none;
+      background: none;
+      cursor: pointer;
+      margin-right: 8px;
+
+      img {
+        width: 28px;
+        height: 28px;
+
+        &:hover {
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+
+  button {
+    border: none;
+    outline: none;
+    background: none;
+    cursor: pointer;
+
+    img {
+      width: 28px;
+      height: 28px;
+
+      &:hover {
+        opacity: 0.5;
+      }
+    }
+  }
+}
+
+.likesCount {
+  font-weight: 600;
+  font-size: 15px;
+  padding: 0 14px;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+
+  .authorUsername {
+    font-weight: 600;
+    font-size: 15px;
+    margin-right: 5px;
+  }
+
+  .authorComment {
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.viewCommentButton {
+  color: grey;
+  margin-bottom: 5px;
+  padding: 0 14px;
+}
+
+.date {
+  color: grey;
+  text-transform: uppercase;
+  font-size: 10px;
+  margin-bottom: 14px;
+  padding: 0 14px;
+}
+
+.comment {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid $borderColor;
+  padding: 10px;
+
+  input {
+    width: 365px;
+    border: none;
+    outline: none;
+  }
+
+  button {
+    color: $buttonColor;
+    font-weight: 600;
+  }
+}

@@ -8,6 +8,7 @@ import { setIsLoggedIn } from './redux/slices/auth';
 import { useSelector } from 'react-redux';
 import { selectAuth } from './selectors/selectors';
 import { Home } from './pages/Home/Home';
+import { Header } from './components/Header/Header';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -25,10 +26,12 @@ function App() {
   }, []);
 
   return (
-    <Routes>
-      <Route path="/" element={isLoggedIn ? <Home /> : <SignIn />} />
-      <Route path="/signup" element={<SignUp />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={isLoggedIn ? <Home /> : <SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+      </Routes>
+    </>
   );
 }
 

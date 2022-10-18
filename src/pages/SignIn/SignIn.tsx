@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { selectAuth } from '../../selectors/selectors';
 import { setEmail, setPassword } from '../../redux/slices/auth';
 import { auth } from '../../firebase';
+import cn from 'classnames';
 
 import logo from '../../assets/logo.png';
 
@@ -13,6 +14,8 @@ import styles from './SignIn.module.scss';
 export const SignIn: React.FC = () => {
   const dispatch = useAppDispatch();
   const { email, password } = useSelector(selectAuth);
+
+  const isValid = email && password;
 
   const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setEmail(e.target.value));
@@ -59,7 +62,12 @@ export const SignIn: React.FC = () => {
             />
           </div>
           <div>
-            <button className={styles.formButton} onClick={signIn}>
+            <button
+              className={cn(styles.formButton, {
+                [styles.disabled]: !isValid,
+              })}
+              disabled={!isValid}
+              onClick={signIn}>
               Log In
             </button>
           </div>

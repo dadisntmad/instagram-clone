@@ -8,6 +8,11 @@ declare module '*.svg' {
   export default content;
 }
 
+declare module '*.jpg' {
+  content: any;
+  export default content;
+}
+
 declare module '*.scss' {
   content: any;
   export default content;

@@ -1,0 +1,61 @@
+@import '../../scss//variables.scss';
+
+.root {
+  width: 320px;
+}
+
+.user {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
+
+  .userContent {
+    display: flex;
+    align-items: center;
+
+    div {
+      margin-left: 14px;
+
+      .username {
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .name {
+        font-size: 14px;
+        color: grey;
+      }
+    }
+  }
+
+  button {
+    border: none;
+    outline: none;
+    background: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px;
+    color: $buttonColor;
+  }
+}
+
+.suggestions {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+
+  p {
+    font-size: 14px;
+    font-weight: bold;
+    color: #a9a9a9;
+  }
+
+  button {
+    border: none;
+    outline: none;
+    background: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+  }
+}
