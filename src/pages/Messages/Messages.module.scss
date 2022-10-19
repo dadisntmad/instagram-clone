@@ -1,0 +1,147 @@
+@import '../../scss/variables.scss';
+
+.container {
+  max-width: 890px;
+  padding: 0 15px;
+  margin: 0 auto;
+}
+
+.messages {
+  display: flex;
+  margin-top: 80px;
+  width: 860px;
+  height: 830px;
+  border: 1px solid $borderColor;
+  border-radius: 4px;
+  background: white;
+}
+
+.left {
+  width: 350px;
+  border-right: 1px solid $borderColor;
+  height: 100%;
+  overflow: auto;
+}
+
+.username {
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  padding: 16px;
+  border-bottom: 1px solid $borderColor;
+}
+
+.message {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  cursor: pointer;
+
+  &:hover {
+    background: #f3f3f3;
+  }
+
+  p {
+    margin-left: 8px;
+    font-size: 14px;
+  }
+}
+
+.active {
+  background: #f3f3f3;
+}
+
+.right {
+  width: 540px;
+  height: 100%;
+  padding: 12px;
+
+  img {
+    margin-bottom: 12px;
+  }
+
+  p {
+    font-size: 24px;
+    font-weight: 300;
+    margin-bottom: 4px;
+  }
+  span {
+    font-size: 14px;
+    color: grey;
+  }
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  border: 1px solid $borderColor;
+  padding: 6px 14px;
+  position: fixed;
+  bottom: 35px;
+
+  .smiley {
+    margin-bottom: 0;
+    margin-right: 5px;
+  }
+
+  input {
+    width: 400px;
+    border: none;
+    outline: none;
+    padding-right: 12px;
+  }
+
+  button {
+    border: none;
+    outline: none;
+    background: none;
+    color: $buttonColor;
+    font-weight: 600;
+    cursor: pointer;
+  }
+}
+
+.chat {
+  height: 750px;
+  overflow: auto;
+}
+
+.received {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 12px;
+
+  p {
+    margin-left: 6px;
+    font-size: 15px;
+    padding: 12px;
+    border: 1px solid $borderColor;
+    border-radius: 20px;
+    overflow-wrap: anywhere;
+  }
+}
+
+.sent {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0px 14px;
+
+  p {
+    font-size: 15px;
+    background: #efefef;
+    padding: 12px;
+    border-radius: 20px;
+    overflow-wrap: anywhere;
+  }
+}

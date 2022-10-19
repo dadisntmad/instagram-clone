@@ -10,6 +10,7 @@ import { selectAuth } from './selectors/selectors';
 import { Home } from './pages/Home/Home';
 import { Profile } from './pages/Profile/Profile';
 import { Header } from './components/Header/Header';
+import { Messages } from './pages/Messages/Messages';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -33,6 +34,7 @@ function App() {
         <Route path="/" element={isLoggedIn ? <Home /> : <SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/direct/inbox" element={<Messages />} />
       </Routes>
     </>
   );
