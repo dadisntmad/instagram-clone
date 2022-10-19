@@ -8,6 +8,7 @@ import { setIsLoggedIn } from './redux/slices/auth';
 import { useSelector } from 'react-redux';
 import { selectAuth } from './selectors/selectors';
 import { Home } from './pages/Home/Home';
+import { Profile } from './pages/Profile/Profile';
 import { Header } from './components/Header/Header';
 
 function App() {
@@ -27,9 +28,11 @@ function App() {
 
   return (
     <>
+      {isLoggedIn && <Header />}
       <Routes>
         <Route path="/" element={isLoggedIn ? <Home /> : <SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </>
   );
