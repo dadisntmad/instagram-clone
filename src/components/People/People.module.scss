@@ -1,0 +1,56 @@
+@import '../../scss/variables.scss';
+
+.root {
+  margin: 120px auto;
+  max-width: 600px;
+
+  h4 {
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+}
+
+.content {
+  min-height: 80px;
+  background: white;
+  padding: 14px;
+}
+
+.user {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+
+  .userContent {
+    display: flex;
+    align-items: center;
+
+    div {
+      margin-left: 14px;
+
+      .username {
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .name {
+        font-size: 14px;
+        color: grey;
+      }
+    }
+  }
+
+  button {
+    width: 94px;
+    height: 30px;
+    border: none;
+    outline: none;
+    background: $buttonColor;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    color: white;
+    border-radius: 4px;
+  }
+}

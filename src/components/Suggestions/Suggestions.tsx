@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { auth } from '../../firebase';
 import { ProfileImage } from '../ProfileImage/ProfileImage';
 
@@ -59,7 +60,9 @@ export const Suggestions: React.FC = () => {
       </div>
       <div className={styles.suggestions}>
         <p>Suggestions For You</p>
-        <button>See All</button>
+        <Link to="/explore/people">
+          <button>See All</button>
+        </Link>
       </div>
       {data.map((user) => (
         <div className={styles.user} key={user.id}>

@@ -1,61 +1,87 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ProfileImage } from '../../components/ProfileImage/ProfileImage';
-
-import likes from '../../assets/heart_fill.png';
-import comments from '../../assets/comment.png';
+import { useAppDispatch } from '../../redux/store';
+import { useSelector } from 'react-redux';
+import { selectPost, selectUser } from '../../selectors/selectors';
+import { auth, db } from '../../firebase';
+import { setUser } from '../../redux/slices/user';
+import { setPosts } from '../../redux/slices/post';
 
 import styles from './Profile.module.scss';
 
-const data = [
-  {
-    id: 1,
-    image:
-      'https://images.unsplash.com/photo-1666146421175-28a429221ba0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-    likes: likes,
-    comments: comments,
-  },
-  {
-    id: 2,
-    image:
-      'https://images.unsplash.com/photo-1666114301220-5159dc5f7e2f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-    likes: likes,
-    comments: comments,
-  },
-  {
-    id: 3,
-    image:
-      'https://images.unsplash.com/photo-1666096968009-f8b7bdd51ba3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-    likes: likes,
-    comments: comments,
-  },
-  {
-    id: 4,
-    image:
-      'https://images.unsplash.com/photo-1666017685005-64e7d56aa4f4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-    likes: likes,
-    comments: comments,
-  },
-  {
-    id: 5,
-    image:
-      'https://images.unsplash.com/photo-1665806558925-930b7210d8bb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw3OHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60',
-    likes: likes,
-    comments: comments,
-  },
-];
-
 export const Profile: React.FC = () => {
-  const isCurrentUser = true;
+  const dispatch = useAppDispatch();
+
+  const { user } = useSelector(selectUser);
+  const { posts } = useSelector(selectPost);
+
+  const currentUser = auth.currentUser?.uid;
+
+  useEffect(() => {
+    const fetchUser = () => {
+      db.collection('users')
+        .doc(currentUser)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            dispatch(
+              setUser({
+                uid: doc.id,
+                email: doc.data()?.email,
+                fullName: doc.data()?.fullName,
+                username: doc.data()?.username,
+                imageUrl: doc.data()?.imageUrl,
+                bio: doc.data()?.bio,
+                followers: doc.data()?.followers,
+                following: doc.data()?.following,
+              }),
+            );
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    };
+
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const fetchPosts = () => {
+      db.collection('posts')
+        .where('uid', '==', currentUser)
+        .get()
+        .then((querySnapshot) => {
+          dispatch(
+            setPosts(
+              querySnapshot.docs.map((doc) => ({
+                uid: doc.id,
+                username: doc.data().username,
+                profileImage: doc.data().profileImage,
+                postUrl: doc.data().postUrl,
+                postId: doc.data().postId,
+                likes: doc.data().likes,
+                description: doc.data().description,
+                datePublished: doc.data().datePublished,
+              })),
+            ),
+          );
+        })
+        .catch((e) => console.log(e));
+    };
+
+    fetchPosts();
+  }, []);
 
   return (
     <div className={styles.profile}>
       <div className={styles.root}>
         <div className={styles.profileHeader}>
-          <ProfileImage size={150} />
+          <ProfileImage size={150} imageUrl={user.imageUrl} />
           <div>
             <div className={styles.profileContent}>
-              <p>username</p>
-              {isCurrentUser ? (
+              <p>{user?.username}</p>
+              {currentUser ? (
                 <button className={styles.profileContentButton}>Edit profile</button>
               ) : (
                 <div className={styles.profileContentButtons}>
@@ -66,22 +92,23 @@ export const Profile: React.FC = () => {
             </div>
             <div className={styles.statistics}>
               <p>
-                <span>1</span> post
+                <span>{posts.length}</span>{' '}
+                {posts.length > 1 || posts.length === 0 ? 'posts' : 'post'}
               </p>
               <p>
-                <span>17 </span> followers
+                <span>{user.followers?.length} </span> followers
               </p>
               <p>
-                <span>10</span> following
+                <span>{user.following?.length}</span> following
               </p>
             </div>
-            <p className={styles.bio}>Bio</p>
+            <p className={styles.bio}>{user.bio}</p>
           </div>
         </div>
         <div className={styles.posts}>
-          {data.map((post) => (
-            <div className={styles.post} key={post.id}>
-              <img src={post.image} alt="user-post" />
+          {posts.map((post) => (
+            <div className={styles.post} key={post.postId}>
+              <img src={post.postUrl} alt="user-post" />
               <div className={styles.overlay}>
                 <div className={styles.overlayItem}>
                   <svg
@@ -93,7 +120,7 @@ export const Profile: React.FC = () => {
                     viewBox="0 0 24 24">
                     <path d="M12 4.419c-2.826-5.695-11.999-4.064-11.999 3.27 0 7.27 9.903 10.938 11.999 15.311 2.096-4.373 12-8.041 12-15.311 0-7.327-9.17-8.972-12-3.27z" />
                   </svg>
-                  <p>10</p>
+                  <p>{post.likes.length}</p>
                   <svg
                     className={styles.icon}
                     width="22"
@@ -107,7 +134,7 @@ export const Profile: React.FC = () => {
                       fill="white"
                     />
                   </svg>
-                  <p>10</p>
+                  <p>{post.likes.length}</p>
                 </div>
               </div>
             </div>

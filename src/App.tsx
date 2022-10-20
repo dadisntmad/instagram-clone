@@ -1,16 +1,13 @@
 import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { SignIn } from './pages/SignIn/SignIn';
-import { SignUp } from './pages/SignUp/SignUp';
+import { SignIn, SignUp, Home, Profile, Messages, Explore } from './pages';
+import { Header } from './components/Header/Header';
+import { People } from './components/People/People';
 import { auth } from './firebase';
 import { useAppDispatch } from './redux/store';
 import { setIsLoggedIn } from './redux/slices/auth';
 import { useSelector } from 'react-redux';
 import { selectAuth } from './selectors/selectors';
-import { Home } from './pages/Home/Home';
-import { Profile } from './pages/Profile/Profile';
-import { Header } from './components/Header/Header';
-import { Messages } from './pages/Messages/Messages';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -35,6 +32,8 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/direct/inbox" element={<Messages />} />
+        <Route path="/explore/people" element={<People />} />
+        <Route path="/explore" element={<Explore />} />
       </Routes>
     </>
   );

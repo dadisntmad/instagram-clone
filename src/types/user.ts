@@ -1,3 +1,8 @@
+export type UserSliceState = {
+  user: User;
+  users: User[];
+};
+
 export type User = {
   uid: string | undefined;
   email: string;
