@@ -39,7 +39,7 @@ const data = [
     id: 2,
     inactive: add,
     active: addFill,
-    linkTo: '',
+    linkTo: '/new-post',
     width: 28,
     alt: 'new-post',
   },

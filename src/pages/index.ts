@@ -4,3 +4,4 @@ export * from './Messages/Messages';
 export * from './Profile/Profile';
 export * from './SignIn/SignIn';
 export * from './SignUp/SignUp';
+export * from './AddPost/AddPost';
