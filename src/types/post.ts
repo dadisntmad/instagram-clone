@@ -2,7 +2,6 @@ import { User } from './user';
 
 export type PostSliceState = {
   posts: Post[];
-  allPosts: Post[];
 };
 
 export type Post = {
