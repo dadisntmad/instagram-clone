@@ -9,6 +9,7 @@
   height: 650px;
   background: white;
   border-radius: 8px;
+  border: 1px solid $borderColor;
 }
 
 .header {
@@ -60,7 +61,7 @@
 
   img {
     width: 500px;
-    height: 604px;
+    height: 602px;
     object-fit: cover;
     margin-right: 12px;
   }

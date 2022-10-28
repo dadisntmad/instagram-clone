@@ -1,53 +1,138 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import { ProfileImage } from '../../components/ProfileImage/ProfileImage';
+import { useNavigate } from 'react-router-dom';
+import firebase from 'firebase/app';
+import { auth, db, storage } from '../../firebase';
+import { User } from '../../types/user';
+import { v4 as uuidv4 } from 'uuid';
 
 import picture from '../../assets/picture.png';
-import { ProfileImage } from '../../components/ProfileImage/ProfileImage';
 
 import styles from './AddPost.module.scss';
 
 export const AddPost = () => {
+  const navigate = useNavigate();
+
+  const [file, setFile] = useState<Blob | any>();
+  const [selectedFile, setSelectedFile] = useState<Blob | any>();
+  const [user, setUser] = useState<User>();
+  const [caption, setCaption] = useState('');
+
   const selectRef = useRef<HTMLInputElement>(null);
 
-  const textLength = 'test';
-  const isSelected = false;
+  const currentUser = auth.currentUser?.uid;
+  const postId = uuidv4();
 
-  const onImageSelect = () => {
-    selectRef.current?.click();
+  const childPath = `posts/${currentUser}/${Math.random().toString(36)}`;
+
+  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFile(e.target.files![0]);
+    setSelectedFile(URL.createObjectURL(e.target.files![0]));
   };
+
+  const onSelectImage = async () => {
+    // reference
+    const task = storage.ref().child(childPath).put(file, { contentType: 'image/jpeg' });
+
+    const taskProgress = (snapshot: any) => {
+      console.log(`transferred: ${snapshot.bytesTransferred}`);
+    };
+
+    const taskCompleted = () => {
+      task.snapshot.ref.getDownloadURL().then((snapshot) => {
+        onSavePost(snapshot);
+        navigate('/profile');
+        setCaption('');
+        setFile(null);
+      });
+    };
+
+    const taskError = (snapshot: any) => {
+      console.log(snapshot);
+    };
+
+    task.on('state_changed', taskProgress, taskError, taskCompleted);
+  };
+
+  const onSavePost = (fileUrl: string) => {
+    const data = {
+      uid: currentUser,
+      username: user?.username,
+      profileImage: user?.imageUrl,
+      postUrl: fileUrl,
+      postId: postId,
+      likes: [],
+      comments: [],
+      description: caption,
+      datePublished: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+
+    db.collection('posts').doc(postId).set(data);
+  };
+
+  const onCaptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setCaption(e.target.value);
+  };
+
+  useEffect(() => {
+    const fetchUser = () => {
+      db.collection('users')
+        .doc(currentUser)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            setUser({
+              uid: doc.id,
+              email: doc.data()?.email,
+              fullName: doc.data()?.fullName,
+              username: doc.data()?.username,
+              imageUrl: doc.data()?.imageUrl,
+              bio: doc.data()?.bio,
+              followers: doc.data()?.followers,
+              following: doc.data()?.following,
+            });
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    };
+
+    fetchUser();
+  }, []);
 
   return (
     <div className={styles.root}>
       <div>
         <div className={styles.header}>
           <p>Create new post</p>
-          {isSelected && <button>Share</button>}
+          {file && <button onClick={onSelectImage}>Share</button>}
         </div>
-        {isSelected ? (
+        {file ? (
           <div className={styles.photo}>
-            <img
-              src="https://images.unsplash.com/photo-1666298864149-f693519a2556?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
-              alt=""
-            />
+            <img src={selectedFile} alt="picked-file" />
             <div className={styles.author}>
               <div className={styles.user}>
-                <ProfileImage size={35} />
-                <p>username</p>
+                <ProfileImage size={35} imageUrl={user?.imageUrl} />
+                <p>{user?.username}</p>
               </div>
               <textarea
+                value={caption}
+                onChange={onCaptionChange}
                 className={styles.textarea}
                 cols={40}
                 rows={27}
                 maxLength={2200}
                 placeholder="Write a caption..."
               />
-              <p className={styles.textLength}>{textLength.length}/2200</p>
+              <p className={styles.textLength}>{caption.length}/2200</p>
             </div>
           </div>
         ) : (
           <div className={styles.content}>
             <img src={picture} alt="preview" />
-            <button onClick={onImageSelect}>Select from computer</button>
-            <input ref={selectRef} type="file" hidden />
+            <button onClick={() => selectRef.current?.click()}>Select from computer</button>
+            <input ref={selectRef} type="file" hidden onChange={onFileChange} />
           </div>
         )}
       </div>

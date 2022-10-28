@@ -50,6 +50,7 @@ export const Profile: React.FC = () => {
     const fetchPosts = () => {
       db.collection('posts')
         .where('uid', '==', currentUser)
+        .orderBy('datePublished', 'desc')
         .get()
         .then((querySnapshot) => {
           dispatch(
