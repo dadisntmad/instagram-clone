@@ -1,0 +1,175 @@
+@import '../../scss/variables.scss';
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, transparent 100%);
+  z-index: 777;
+}
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  background: white;
+  width: 70vw;
+  height: 95vh;
+
+  img {
+    width: 40vw;
+    height: 95vh;
+    object-fit: cover;
+  }
+}
+
+.comments {
+  width: 576px;
+  height: 700px;
+  border-bottom: 1px solid $borderColor;
+}
+
+.author {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-height: 100px;
+  padding: 14px;
+  border-bottom: 1px solid $borderColor;
+
+  img {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    p {
+      margin-left: 7px;
+      font-weight: 500;
+      font-size: 14px;
+    }
+  }
+}
+
+.comment {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 92%;
+
+  h3 {
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+
+  span {
+    font-size: 14px;
+    font-weight: 300;
+  }
+}
+
+.footerActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 0 14px;
+}
+
+.footer {
+  .footerActions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 0 14px;
+  }
+
+  .footerButtons {
+    button {
+      border: none;
+      outline: none;
+      background: none;
+      cursor: pointer;
+      margin-right: 8px;
+
+      img {
+        width: 28px;
+        height: 28px;
+
+        &:hover {
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+
+  button {
+    border: none;
+    outline: none;
+    background: none;
+    cursor: pointer;
+
+    img {
+      width: 28px;
+      height: 28px;
+
+      &:hover {
+        opacity: 0.5;
+      }
+    }
+  }
+}
+
+.likes {
+  padding: 0 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.date {
+  font-size: 10px;
+  color: grey;
+  padding: 0 18px;
+  text-transform: uppercase;
+}
+
+.form {
+  position: absolute;
+  bottom: 0;
+  width: 576px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid $borderColor;
+  padding: 20px 14px;
+
+  img {
+    width: 32px;
+    height: 32px;
+  }
+
+  input {
+    width: 465px;
+    border: none;
+    outline: none;
+  }
+
+  button {
+    color: $buttonColor;
+    font-weight: 600;
+  }
+}

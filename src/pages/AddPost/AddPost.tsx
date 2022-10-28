@@ -10,7 +10,7 @@ import picture from '../../assets/picture.png';
 
 import styles from './AddPost.module.scss';
 
-export const AddPost = () => {
+export const AddPost: React.FC = () => {
   const navigate = useNavigate();
 
   const [file, setFile] = useState<Blob | any>();
