@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { db } from '../../firebase';
+import { User } from '../../types/user';
 import { ProfileImage } from '../ProfileImage/ProfileImage';
 
 import styles from './SearchBar.module.scss';
@@ -9,12 +11,9 @@ type PopupClick = MouseEvent & {
 
 export const SearchBar: React.FC = () => {
   const [searchValue, setSearchValue] = useState('');
+  const [users, setUsers] = useState<User[]>([]);
 
   const modalRef = useRef<HTMLDivElement>(null);
-
-  const onValueChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value);
-  };
 
   const onInputClear = () => {
     setSearchValue('');
@@ -33,6 +32,30 @@ export const SearchBar: React.FC = () => {
     return () => document.body.removeEventListener('click', handleClickOutside);
   }, []);
 
+  const fetchUsers = () => {
+    db.collection('users')
+      .where('username', '>=', searchValue)
+      .limit(5)
+      .get()
+      .then((querySnapshot) => {
+        setUsers(
+          querySnapshot.docs.map((doc) => ({
+            uid: doc.id,
+            email: doc.data()?.email,
+            fullName: doc.data()?.fullName,
+            username: doc.data()?.username,
+            imageUrl: doc.data()?.imageUrl,
+            bio: doc.data()?.bio,
+            followers: doc.data()?.followers,
+            following: doc.data()?.following,
+          })),
+        );
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   return (
     <>
       <div className={styles.search}>
@@ -50,7 +73,10 @@ export const SearchBar: React.FC = () => {
           type="text"
           placeholder="Search"
           value={searchValue}
-          onChange={onValueChanged}
+          onChange={(e) => {
+            setSearchValue(e.target.value);
+            fetchUsers();
+          }}
         />
         {searchValue && (
           <svg
@@ -67,10 +93,12 @@ export const SearchBar: React.FC = () => {
       </div>
       {searchValue && (
         <div className={styles.modal} ref={modalRef}>
-          <div className={styles.user}>
-            <ProfileImage size={45} />
-            <p>username</p>
-          </div>
+          {users.map((user) => (
+            <div className={styles.user} key={user.uid}>
+              <ProfileImage size={45} imageUrl={user.imageUrl} />
+              <p>{user.username}</p>
+            </div>
+          ))}
         </div>
       )}
     </>
