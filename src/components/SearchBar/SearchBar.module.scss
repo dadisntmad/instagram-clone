@@ -26,3 +26,35 @@
     cursor: pointer;
   }
 }
+
+.modal {
+  position: absolute;
+  top: 50px;
+  left: 37%;
+  width: 300px;
+  height: 300px;
+  background: white;
+  border-radius: 4px;
+  overflow: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  padding: 6px 14px;
+  cursor: pointer;
+
+  &:hover {
+    background: #fafafa;
+  }
+
+  p {
+    margin-left: 12px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
