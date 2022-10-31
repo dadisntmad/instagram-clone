@@ -1,6 +1,13 @@
 import React, { useEffect } from 'react';
 import { ProfileImage } from '../ProfileImage/ProfileImage';
 import { User } from '../../types/user';
+import { FirestoreDate } from '../../types/post';
+import { useSelector } from 'react-redux';
+import { selectComment } from '../../selectors/selectors';
+import { useAppDispatch } from '../../redux/store';
+import { auth, db } from '../../firebase';
+import { setComments } from '../../redux/slices/comment';
+import moment from 'moment';
 
 import dots from '../../assets/dots.png';
 import heart from '../../assets/heart.png';
@@ -18,6 +25,9 @@ type PostModalProps = {
   likes: User[];
   username: string;
   profileImage: string;
+  datePublished: FirestoreDate;
+  description: string;
+  postId: string;
 };
 
 export const PostModal: React.FC<PostModalProps> = ({
@@ -27,13 +37,47 @@ export const PostModal: React.FC<PostModalProps> = ({
   likes,
   username,
   profileImage,
+  datePublished,
+  description,
+  postId,
 }) => {
+  const dispatch = useAppDispatch();
+  const { comments } = useSelector(selectComment);
+
   useEffect(() => {
     if (isOpened) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
+  }, []);
+
+  useEffect(() => {
+    const fetchComments = () => {
+      db.collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .get()
+        .then((querySnapshot) => {
+          dispatch(
+            setComments(
+              querySnapshot.docs.map((doc) => ({
+                uid: doc.id,
+                commentId: doc.id,
+                text: doc.data().text,
+                profilePic: doc.data().profilePic,
+                name: doc.data().name,
+                datePublished: doc.data().datePublished,
+              })),
+            ),
+          );
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    };
+
+    fetchComments();
   }, []);
 
   return (
@@ -58,9 +102,24 @@ export const PostModal: React.FC<PostModalProps> = ({
             </div>
             <img src={dots} alt="menu" />
           </div>
-          <div className={styles.comment}>
-            <h3>No comments yet.</h3>
-            <span>Start the conversation</span>
+          <div className={styles.commentActive}>
+            <div className={styles.commentAuthor}>
+              <ProfileImage size={40} imageUrl={profileImage} />
+              <p>{username}</p>
+              <div>{description}</div>
+            </div>
+            <div className={styles.commentsBlock}>
+              {comments.map((comment) => (
+                <div className={styles.userComment} key={comment.commentId}>
+                  <div className={styles.userData}>
+                    <ProfileImage size={35} imageUrl={comment.profilePic} />
+                    <p>{comment.name}</p>
+                    <div>{comment.text}</div>
+                  </div>
+                  <span>{moment(comment.datePublished.seconds * 1000).format('MMMM D')}</span>
+                </div>
+              ))}
+            </div>
           </div>
           <div className={styles.footer}>
             <div className={styles.footerActions}>
@@ -83,7 +142,7 @@ export const PostModal: React.FC<PostModalProps> = ({
               {likes.length}
               {likes.length > 1 || likes.length === 0 ? ' likes' : ' like'}
             </p>
-            <p className={styles.date}>october 18</p>
+            <p className={styles.date}>{moment(datePublished.seconds * 1000).format('MMMM D')}</p>
             <div className={styles.form}>
               <img src={smiley} alt="smiley-face" />
               <input type="text" placeholder="Add a comment..." />

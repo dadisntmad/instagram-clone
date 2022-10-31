@@ -1,59 +1,84 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { auth } from '../../firebase';
+import React, { useState, useEffect } from 'react';
 import { ProfileImage } from '../ProfileImage/ProfileImage';
+import { Link } from 'react-router-dom';
+import { auth, db } from '../../firebase';
+import { User } from '../../types/user';
 
 import styles from './Suggestions.module.scss';
 
-const data = [
-  {
-    id: 1,
-    size: 64,
-    imageUrl:
-      'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=765&q=80',
-    username: 'pufferfish',
-  },
-  {
-    id: 2,
-    size: 64,
-    imageUrl:
-      'https://images.unsplash.com/photo-1495216875107-c6c043eb703f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-    username: 'brainy',
-  },
-  {
-    id: 3,
-    size: 64,
-    imageUrl:
-      'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-    username: 'spiteful',
-  },
-  {
-    id: 4,
-    size: 64,
-    imageUrl:
-      'https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80',
-    username: 'unfolded',
-  },
-  {
-    id: 5,
-    size: 64,
-    username: 'heath',
-  },
-];
-
 export const Suggestions: React.FC = () => {
+  const [user, setUser] = useState<User>();
+  const [users, setUsers] = useState<User[]>([]);
+
+  const currentUser = auth.currentUser?.uid;
+
   const signOut = () => {
     auth.signOut();
   };
+
+  useEffect(() => {
+    const fetchUser = () => {
+      db.collection('users')
+        .doc(currentUser)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            setUser({
+              uid: doc.id,
+              email: doc.data()?.email,
+              fullName: doc.data()?.fullName,
+              username: doc.data()?.username,
+              imageUrl: doc.data()?.imageUrl,
+              bio: doc.data()?.bio,
+              followers: doc.data()?.followers,
+              following: doc.data()?.following,
+            });
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    };
+
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const fetchUsers = () => {
+      db.collection('users')
+        .where('uid', '!=', currentUser)
+        .limit(5)
+        .get()
+        .then((querySnapshot) => {
+          setUsers(
+            querySnapshot.docs.map((doc) => ({
+              uid: doc.id,
+              email: doc.data()?.email,
+              fullName: doc.data()?.fullName,
+              username: doc.data()?.username,
+              imageUrl: doc.data()?.imageUrl,
+              bio: doc.data()?.bio,
+              followers: doc.data()?.followers,
+              following: doc.data()?.following,
+            })),
+          );
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    };
+
+    fetchUsers();
+  }, []);
 
   return (
     <div className={styles.root}>
       <div className={styles.user}>
         <div className={styles.userContent}>
-          <ProfileImage size={64} />
+          <ProfileImage size={64} imageUrl={user?.imageUrl} />
           <div>
-            <p className={styles.username}>dadisntmad</p>
-            <p className={styles.name}>Ruslan</p>
+            <p className={styles.username}>{user?.username}</p>
+            <p className={styles.name}>{user?.bio}</p>
           </div>
         </div>
         <button onClick={signOut}>Sign Out</button>
@@ -64,8 +89,8 @@ export const Suggestions: React.FC = () => {
           <button>See All</button>
         </Link>
       </div>
-      {data.map((user) => (
-        <div className={styles.user} key={user.id}>
+      {users.map((user) => (
+        <div className={styles.user} key={user.uid}>
           <div className={styles.userContent}>
             <ProfileImage size={40} imageUrl={user.imageUrl} />
             <div>

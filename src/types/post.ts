@@ -12,5 +12,10 @@ export type Post = {
   postId: string;
   likes: User[];
   description: string;
-  datePublished?: string;
+  datePublished: FirestoreDate;
+};
+
+export type FirestoreDate = {
+  seconds: number;
+  nanoseconds: number;
 };

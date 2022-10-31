@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { db } from '../../firebase';
+import { auth, db } from '../../firebase';
 import { setUsers } from '../../redux/slices/user';
 import { useAppDispatch } from '../../redux/store';
 import { selectUser } from '../../selectors/selectors';
@@ -13,9 +13,12 @@ export const People = () => {
 
   const { users } = useSelector(selectUser);
 
+  const currentUser = auth.currentUser?.uid;
+
   useEffect(() => {
     const fetchUsers = () => {
       db.collection('users')
+        .where('uid', '!=', currentUser)
         .get()
         .then((querySnapshot) => {
           dispatch(

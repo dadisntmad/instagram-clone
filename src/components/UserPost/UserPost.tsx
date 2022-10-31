@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FirestoreDate } from '../../types/post';
 import { User } from '../../types/user';
 import { PostModal } from '../PostModal/PostModal';
 
@@ -9,9 +10,20 @@ type UserPostProps = {
   likes: User[];
   username: string;
   profileImage: string;
+  datePublished: FirestoreDate;
+  description: string;
+  postId: string;
 };
 
-export const UserPost: React.FC<UserPostProps> = ({ postUrl, likes, username, profileImage }) => {
+export const UserPost: React.FC<UserPostProps> = ({
+  postUrl,
+  likes,
+  username,
+  profileImage,
+  datePublished,
+  description,
+  postId,
+}) => {
   const [isOpened, setIsOpened] = useState(false);
 
   const onOpenModal = () => {
@@ -32,6 +44,9 @@ export const UserPost: React.FC<UserPostProps> = ({ postUrl, likes, username, pr
           likes={likes}
           username={username}
           profileImage={profileImage}
+          datePublished={datePublished}
+          description={description}
+          postId={postId}
         />
       )}
       <div className={styles.post} onClick={onOpenModal}>
