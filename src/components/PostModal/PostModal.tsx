@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { MenuModal } from '../MenuModal/MenuModal';
 import { ProfileImage } from '../ProfileImage/ProfileImage';
 import { User } from '../../types/user';
 import { FirestoreDate } from '../../types/post';
@@ -28,6 +29,7 @@ type PostModalProps = {
   datePublished: FirestoreDate;
   description: string;
   postId: string;
+  uid: string;
 };
 
 export const PostModal: React.FC<PostModalProps> = ({
@@ -40,9 +42,15 @@ export const PostModal: React.FC<PostModalProps> = ({
   datePublished,
   description,
   postId,
+  uid,
 }) => {
   const dispatch = useAppDispatch();
+
+  const [menuOpened, setMenuOpened] = useState(false);
+
   const { comments } = useSelector(selectComment);
+
+  const currentUser = auth.currentUser?.uid;
 
   useEffect(() => {
     if (isOpened) {
@@ -80,77 +88,95 @@ export const PostModal: React.FC<PostModalProps> = ({
     fetchComments();
   }, []);
 
+  const onOpenMenu = () => {
+    setMenuOpened(true);
+  };
+
+  const onCloseMenu = () => {
+    setMenuOpened(false);
+  };
+
   return (
-    <div className={styles.overlay}>
-      <svg
-        onClick={onCloseModal}
-        style={{ position: 'absolute', top: 24, right: 24, cursor: 'pointer' }}
-        fill="white"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        width="24px"
-        height="24px">
-        <path d="M 4.7070312 3.2929688 L 3.2929688 4.7070312 L 10.585938 12 L 3.2929688 19.292969 L 4.7070312 20.707031 L 12 13.414062 L 19.292969 20.707031 L 20.707031 19.292969 L 13.414062 12 L 20.707031 4.7070312 L 19.292969 3.2929688 L 12 10.585938 L 4.7070312 3.2929688 z" />
-      </svg>
-      <div className={styles.modal}>
-        <img src={postUrl} alt="post" />
-        <div className={styles.comments}>
-          <div className={styles.author}>
-            <div>
-              <ProfileImage size={40} imageUrl={profileImage} />
-              <p>{username}</p>
+    <>
+      {menuOpened && (
+        <MenuModal
+          onCloseMenu={onCloseMenu}
+          onCloseModal={onCloseModal}
+          postId={postId}
+          isAuthor={uid === currentUser}
+        />
+      )}
+      <div className={styles.overlay}>
+        <svg
+          onClick={onCloseModal}
+          style={{ position: 'absolute', top: 24, right: 24, cursor: 'pointer' }}
+          fill="white"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="24px"
+          height="24px">
+          <path d="M 4.7070312 3.2929688 L 3.2929688 4.7070312 L 10.585938 12 L 3.2929688 19.292969 L 4.7070312 20.707031 L 12 13.414062 L 19.292969 20.707031 L 20.707031 19.292969 L 13.414062 12 L 20.707031 4.7070312 L 19.292969 3.2929688 L 12 10.585938 L 4.7070312 3.2929688 z" />
+        </svg>
+        <div className={styles.modal}>
+          <img src={postUrl} alt="post" />
+          <div className={styles.comments}>
+            <div className={styles.author}>
+              <div>
+                <ProfileImage size={40} imageUrl={profileImage} />
+                <p>{username}</p>
+              </div>
+              <img src={dots} alt="menu" onClick={onOpenMenu} />
             </div>
-            <img src={dots} alt="menu" />
-          </div>
-          <div className={styles.commentActive}>
-            <div className={styles.commentAuthor}>
-              <ProfileImage size={40} imageUrl={profileImage} />
-              <p>{username}</p>
-              <div>{description}</div>
-            </div>
-            <div className={styles.commentsBlock}>
-              {comments.map((comment) => (
-                <div className={styles.userComment} key={comment.commentId}>
-                  <div className={styles.userData}>
-                    <ProfileImage size={35} imageUrl={comment.profilePic} />
-                    <p>{comment.name}</p>
-                    <div>{comment.text}</div>
+            <div className={styles.commentActive}>
+              <div className={styles.commentAuthor}>
+                <ProfileImage size={40} imageUrl={profileImage} />
+                <p>{username}</p>
+                <div>{description}</div>
+              </div>
+              <div className={styles.commentsBlock}>
+                {comments.map((comment) => (
+                  <div className={styles.userComment} key={comment.commentId}>
+                    <div className={styles.userData}>
+                      <ProfileImage size={35} imageUrl={comment.profilePic} />
+                      <p>{comment.name}</p>
+                      <div>{comment.text}</div>
+                    </div>
+                    <span>{moment(comment.datePublished.seconds * 1000).format('MMMM D')}</span>
                   </div>
-                  <span>{moment(comment.datePublished.seconds * 1000).format('MMMM D')}</span>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-          <div className={styles.footer}>
-            <div className={styles.footerActions}>
-              <div className={styles.footerButtons}>
+            <div className={styles.footer}>
+              <div className={styles.footerActions}>
+                <div className={styles.footerButtons}>
+                  <button>
+                    <img src={heart} alt="like" />
+                  </button>
+                  <button>
+                    <img src={comment} alt="comment" />
+                  </button>
+                  <button>
+                    <img src={send} alt="send" />
+                  </button>
+                </div>
                 <button>
-                  <img src={heart} alt="like" />
-                </button>
-                <button>
-                  <img src={comment} alt="comment" />
-                </button>
-                <button>
-                  <img src={send} alt="send" />
+                  <img src={bookmark} alt="bookmark" />
                 </button>
               </div>
-              <button>
-                <img src={bookmark} alt="bookmark" />
-              </button>
-            </div>
-            <p className={styles.likes}>
-              {likes.length}
-              {likes.length > 1 || likes.length === 0 ? ' likes' : ' like'}
-            </p>
-            <p className={styles.date}>{moment(datePublished.seconds * 1000).format('MMMM D')}</p>
-            <div className={styles.form}>
-              <img src={smiley} alt="smiley-face" />
-              <input type="text" placeholder="Add a comment..." />
-              <button>Post</button>
+              <p className={styles.likes}>
+                {likes.length}
+                {likes.length > 1 || likes.length === 0 ? ' likes' : ' like'}
+              </p>
+              <p className={styles.date}>{moment(datePublished.seconds * 1000).format('MMMM D')}</p>
+              <div className={styles.form}>
+                <img src={smiley} alt="smiley-face" />
+                <input type="text" placeholder="Add a comment..." />
+                <button>Post</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };

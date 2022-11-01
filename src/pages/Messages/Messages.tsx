@@ -103,18 +103,18 @@ const users = [
 const messages = [
   {
     id: 0,
-    receivedMessage: 'Hello, how are you?',
-    sentMessage: 'fine, wby?',
+    receivedMessage: 'received message',
+    sentMessage: 'sent message',
   },
   {
     id: 1,
-    receivedMessage: 'where r u?',
-    sentMessage: 'i will arrive in 10 mins',
+    receivedMessage: 'received message',
+    sentMessage: 'sent message',
   },
   {
     id: 2,
-    receivedMessage: 'have u seen this movie? (link)',
-    sentMessage: 'yeah',
+    receivedMessage: 'received message',
+    sentMessage: 'sent message',
   },
 ];
 

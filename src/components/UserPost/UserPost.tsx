@@ -6,6 +6,7 @@ import { PostModal } from '../PostModal/PostModal';
 import styles from './UserPost.module.scss';
 
 type UserPostProps = {
+  uid: string;
   postUrl: string;
   likes: User[];
   username: string;
@@ -16,6 +17,7 @@ type UserPostProps = {
 };
 
 export const UserPost: React.FC<UserPostProps> = ({
+  uid,
   postUrl,
   likes,
   username,
@@ -47,6 +49,7 @@ export const UserPost: React.FC<UserPostProps> = ({
           datePublished={datePublished}
           description={description}
           postId={postId}
+          uid={uid}
         />
       )}
       <div className={styles.post} onClick={onOpenModal}>

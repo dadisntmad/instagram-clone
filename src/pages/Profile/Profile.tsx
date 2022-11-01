@@ -57,7 +57,7 @@ export const Profile: React.FC = () => {
           dispatch(
             setPosts(
               querySnapshot.docs.map((doc) => ({
-                uid: doc.id,
+                uid: doc.data().uid,
                 username: doc.data().username,
                 profileImage: doc.data().profileImage,
                 postUrl: doc.data().postUrl,
