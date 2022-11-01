@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { auth, db } from '../../firebase';
-import { setUsers } from '../../redux/slices/user';
+import { auth } from '../../firebase';
+import { fetchUsers } from '../../redux/actions/user';
 import { useAppDispatch } from '../../redux/store';
 import { selectUser } from '../../selectors/selectors';
 import { ProfileImage } from '../ProfileImage/ProfileImage';
 
 import styles from './People.module.scss';
 
-export const People = () => {
+export const People: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const { users } = useSelector(selectUser);
@@ -16,32 +16,7 @@ export const People = () => {
   const currentUser = auth.currentUser?.uid;
 
   useEffect(() => {
-    const fetchUsers = () => {
-      db.collection('users')
-        .where('uid', '!=', currentUser)
-        .get()
-        .then((querySnapshot) => {
-          dispatch(
-            setUsers(
-              querySnapshot.docs.map((doc) => ({
-                uid: doc.id,
-                email: doc.data()?.email,
-                fullName: doc.data()?.fullName,
-                username: doc.data()?.username,
-                imageUrl: doc.data()?.imageUrl,
-                bio: doc.data()?.bio,
-                followers: doc.data()?.followers,
-                following: doc.data()?.following,
-              })),
-            ),
-          );
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    };
-
-    fetchUsers();
+    dispatch(fetchUsers(String(currentUser)));
   }, []);
 
   return (

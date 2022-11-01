@@ -6,8 +6,8 @@ import { FirestoreDate } from '../../types/post';
 import { useSelector } from 'react-redux';
 import { selectComment } from '../../selectors/selectors';
 import { useAppDispatch } from '../../redux/store';
-import { auth, db } from '../../firebase';
-import { setComments } from '../../redux/slices/comment';
+import { auth } from '../../firebase';
+import { fetchComments } from '../../redux/actions/comment';
 import moment from 'moment';
 
 import dots from '../../assets/dots.png';
@@ -61,31 +61,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   }, []);
 
   useEffect(() => {
-    const fetchComments = () => {
-      db.collection('posts')
-        .doc(postId)
-        .collection('comments')
-        .get()
-        .then((querySnapshot) => {
-          dispatch(
-            setComments(
-              querySnapshot.docs.map((doc) => ({
-                uid: doc.id,
-                commentId: doc.id,
-                text: doc.data().text,
-                profilePic: doc.data().profilePic,
-                name: doc.data().name,
-                datePublished: doc.data().datePublished,
-              })),
-            ),
-          );
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    };
-
-    fetchComments();
+    dispatch(fetchComments(postId));
   }, []);
 
   const onOpenMenu = () => {

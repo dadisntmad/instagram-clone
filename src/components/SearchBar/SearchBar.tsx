@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { db } from '../../firebase';
-import { User } from '../../types/user';
+import { useSelector } from 'react-redux';
+import { fetchSearchingUsers } from '../../redux/actions/user';
+import { useAppDispatch } from '../../redux/store';
+import { selectUser } from '../../selectors/selectors';
 import { ProfileImage } from '../ProfileImage/ProfileImage';
 
 import styles from './SearchBar.module.scss';
@@ -10,8 +12,9 @@ type PopupClick = MouseEvent & {
 };
 
 export const SearchBar: React.FC = () => {
+  const dispatch = useAppDispatch();
   const [searchValue, setSearchValue] = useState('');
-  const [users, setUsers] = useState<User[]>([]);
+  const { users } = useSelector(selectUser);
 
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -32,30 +35,6 @@ export const SearchBar: React.FC = () => {
     return () => document.body.removeEventListener('click', handleClickOutside);
   }, []);
 
-  const fetchUsers = () => {
-    db.collection('users')
-      .where('username', '>=', searchValue)
-      .limit(5)
-      .get()
-      .then((querySnapshot) => {
-        setUsers(
-          querySnapshot.docs.map((doc) => ({
-            uid: doc.id,
-            email: doc.data()?.email,
-            fullName: doc.data()?.fullName,
-            username: doc.data()?.username,
-            imageUrl: doc.data()?.imageUrl,
-            bio: doc.data()?.bio,
-            followers: doc.data()?.followers,
-            following: doc.data()?.following,
-          })),
-        );
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
-
   return (
     <>
       <div className={styles.search}>
@@ -75,7 +54,7 @@ export const SearchBar: React.FC = () => {
           value={searchValue}
           onChange={(e) => {
             setSearchValue(e.target.value);
-            fetchUsers();
+            dispatch(fetchSearchingUsers(searchValue));
           }}
         />
         {searchValue && (

@@ -3,12 +3,12 @@ import { ProfileImage } from '../../components/ProfileImage/ProfileImage';
 import { useAppDispatch } from '../../redux/store';
 import { useSelector } from 'react-redux';
 import { selectPost, selectUser } from '../../selectors/selectors';
-import { auth, db } from '../../firebase';
-import { setUser } from '../../redux/slices/user';
-import { setPosts } from '../../redux/slices/post';
+import { auth } from '../../firebase';
 
 import styles from './Profile.module.scss';
 import { UserPost } from '../../components/UserPost/UserPost';
+import { fetchUser } from '../../redux/actions/user';
+import { fetchUserPosts } from '../../redux/actions/post';
 
 export const Profile: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -19,60 +19,11 @@ export const Profile: React.FC = () => {
   const currentUser = auth.currentUser?.uid;
 
   useEffect(() => {
-    const fetchUser = () => {
-      db.collection('users')
-        .doc(currentUser)
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            dispatch(
-              setUser({
-                uid: doc.id,
-                email: doc.data()?.email,
-                fullName: doc.data()?.fullName,
-                username: doc.data()?.username,
-                imageUrl: doc.data()?.imageUrl,
-                bio: doc.data()?.bio,
-                followers: doc.data()?.followers,
-                following: doc.data()?.following,
-              }),
-            );
-          }
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    };
-
-    fetchUser();
+    dispatch(fetchUser(String(currentUser)));
   }, []);
 
   useEffect(() => {
-    const fetchPosts = () => {
-      db.collection('posts')
-        .where('uid', '==', currentUser)
-        .orderBy('datePublished', 'desc')
-        .get()
-        .then((querySnapshot) => {
-          dispatch(
-            setPosts(
-              querySnapshot.docs.map((doc) => ({
-                uid: doc.data().uid,
-                username: doc.data().username,
-                profileImage: doc.data().profileImage,
-                postUrl: doc.data().postUrl,
-                postId: doc.data().postId,
-                likes: doc.data().likes,
-                description: doc.data().description,
-                datePublished: doc.data().datePublished,
-              })),
-            ),
-          );
-        })
-        .catch((e) => console.log(e));
-    };
-
-    fetchPosts();
+    dispatch(fetchUserPosts(String(currentUser)));
   }, []);
 
   return (

@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { ProfileImage } from '../ProfileImage/ProfileImage';
 import { Link } from 'react-router-dom';
-import { auth, db } from '../../firebase';
-import { User } from '../../types/user';
+import { useAppDispatch } from '../../redux/store';
+import { auth } from '../../firebase';
+import { fetchUser, fetchUsers } from '../../redux/actions/user';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../selectors/selectors';
 
 import styles from './Suggestions.module.scss';
 
 export const Suggestions: React.FC = () => {
-  const [user, setUser] = useState<User>();
-  const [users, setUsers] = useState<User[]>([]);
+  const dispatch = useAppDispatch();
+
+  const { user, users } = useSelector(selectUser);
 
   const currentUser = auth.currentUser?.uid;
 
@@ -17,58 +21,11 @@ export const Suggestions: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchUser = () => {
-      db.collection('users')
-        .doc(currentUser)
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            setUser({
-              uid: doc.id,
-              email: doc.data()?.email,
-              fullName: doc.data()?.fullName,
-              username: doc.data()?.username,
-              imageUrl: doc.data()?.imageUrl,
-              bio: doc.data()?.bio,
-              followers: doc.data()?.followers,
-              following: doc.data()?.following,
-            });
-          }
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    };
-
-    fetchUser();
+    dispatch(fetchUser(String(currentUser)));
   }, []);
 
   useEffect(() => {
-    const fetchUsers = () => {
-      db.collection('users')
-        .where('uid', '!=', currentUser)
-        .limit(5)
-        .get()
-        .then((querySnapshot) => {
-          setUsers(
-            querySnapshot.docs.map((doc) => ({
-              uid: doc.id,
-              email: doc.data()?.email,
-              fullName: doc.data()?.fullName,
-              username: doc.data()?.username,
-              imageUrl: doc.data()?.imageUrl,
-              bio: doc.data()?.bio,
-              followers: doc.data()?.followers,
-              following: doc.data()?.following,
-            })),
-          );
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    };
-
-    fetchUsers();
+    dispatch(fetchUsers(String(currentUser)));
   }, []);
 
   return (
@@ -89,7 +46,7 @@ export const Suggestions: React.FC = () => {
           <button>See All</button>
         </Link>
       </div>
-      {users.map((user) => (
+      {users.slice(0, 5).map((user) => (
         <div className={styles.user} key={user.uid}>
           <div className={styles.userContent}>
             <ProfileImage size={40} imageUrl={user.imageUrl} />

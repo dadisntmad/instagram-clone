@@ -5,17 +5,24 @@ import firebase from 'firebase/app';
 import { auth, db, storage } from '../../firebase';
 import { User } from '../../types/user';
 import { v4 as uuidv4 } from 'uuid';
+import { useAppDispatch } from '../../redux/store';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../selectors/selectors';
 
 import picture from '../../assets/picture.png';
 
 import styles from './AddPost.module.scss';
+import { fetchUser } from '../../redux/actions/user';
 
 export const AddPost: React.FC = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const { user } = useSelector(selectUser);
 
   const [file, setFile] = useState<Blob | any>();
   const [selectedFile, setSelectedFile] = useState<Blob | any>();
-  const [user, setUser] = useState<User>();
+  // const [user, setUser] = useState<User>();
   const [caption, setCaption] = useState('');
 
   const selectRef = useRef<HTMLInputElement>(null);
@@ -75,30 +82,7 @@ export const AddPost: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchUser = () => {
-      db.collection('users')
-        .doc(currentUser)
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            setUser({
-              uid: doc.id,
-              email: doc.data()?.email,
-              fullName: doc.data()?.fullName,
-              username: doc.data()?.username,
-              imageUrl: doc.data()?.imageUrl,
-              bio: doc.data()?.bio,
-              followers: doc.data()?.followers,
-              following: doc.data()?.following,
-            });
-          }
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    };
-
-    fetchUser();
+    dispatch(fetchUser(String(currentUser)));
   }, []);
 
   return (
