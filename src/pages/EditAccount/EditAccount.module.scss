@@ -1,0 +1,80 @@
+@import '../../scss/variables.scss';
+
+.root {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.edit {
+  padding: 14px;
+  width: 500px;
+  height: 250px;
+  background: white;
+  border: 1px solid $borderColor;
+  border-radius: 4px;
+}
+
+.profile {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+
+  div {
+    margin-left: 12px;
+
+    p {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    button {
+      border: none;
+      outline: none;
+      background: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      color: $buttonColor;
+    }
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .formField {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 24px;
+
+    input {
+      width: 355px;
+      height: 32px;
+      border-radius: 4px;
+      padding: 0px 14px;
+      outline: none;
+      border: 1px solid $borderColor;
+
+      &:focus {
+        border: 2px solid black;
+      }
+    }
+  }
+}
+
+.submitButton {
+  width: 90px;
+  height: 30px;
+  background: $buttonColor;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  border-radius: 4px;
+  margin: 0 auto;
+}

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { ProfileImage } from '../../components/ProfileImage/ProfileImage';
 import { useAppDispatch } from '../../redux/store';
 import { useSelector } from 'react-redux';
@@ -39,8 +39,10 @@ export const Profile: React.FC = () => {
           <div>
             <div className={styles.profileContent}>
               <p>{user?.username}</p>
-              {currentUser ? (
-                <button className={styles.profileContentButton}>Edit profile</button>
+              {id === currentUser ? (
+                <Link to="/accounts/edit">
+                  <button className={styles.profileContentButton}>Edit profile</button>
+                </Link>
               ) : (
                 <div className={styles.profileContentButtons}>
                   <button className={styles.profileContentButton}>Message</button>

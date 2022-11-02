@@ -5,3 +5,4 @@ export * from './Profile/Profile';
 export * from './SignIn/SignIn';
 export * from './SignUp/SignUp';
 export * from './AddPost/AddPost';
+export * from './EditAccount/EditAccount';

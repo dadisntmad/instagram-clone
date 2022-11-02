@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { SignIn, SignUp, Home, Profile, Messages, Explore, AddPost } from './pages';
+import { SignIn, SignUp, Home, Profile, Messages, Explore, AddPost, EditAccount } from './pages';
 import { Header } from './components/Header/Header';
 import { People } from './components/People/People';
 import { auth } from './firebase';
@@ -35,6 +35,7 @@ function App() {
         <Route path="/explore/people" element={<People />} />
         <Route path="/explore" element={<Explore />} />
         <Route path="/new-post" element={<AddPost />} />
+        <Route path="/accounts/edit" element={<EditAccount />} />
       </Routes>
     </>
   );
