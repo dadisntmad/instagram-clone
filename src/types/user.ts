@@ -1,10 +1,11 @@
 export type UserSliceState = {
   user: User;
   users: User[];
+  searchingUsers: User[];
 };
 
 export type User = {
-  uid: string | undefined;
+  uid: string;
   email: string;
   fullName: string;
   username: string;

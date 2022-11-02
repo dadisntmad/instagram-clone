@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { SearchBar } from '../SearchBar/SearchBar';
+import { Link } from 'react-router-dom';
+import { auth } from '../../firebase';
 
 import logo from '../../assets/logo.png';
 import home from '../../assets/home.png';
@@ -18,58 +19,58 @@ import userFill from '../../assets/user_fill.png';
 
 import styles from './Header.module.scss';
 
-const data = [
-  {
-    id: 0,
-    inactive: home,
-    active: homeFill,
-    linkTo: '/',
-    width: 28,
-    alt: 'home',
-  },
-  {
-    id: 1,
-    inactive: messenger,
-    active: messengerFill,
-    linkTo: '/direct/inbox',
-    width: 28,
-    alt: 'messages',
-  },
-  {
-    id: 2,
-    inactive: add,
-    active: addFill,
-    linkTo: '/new-post',
-    width: 28,
-    alt: 'new-post',
-  },
-  {
-    id: 3,
-    inactive: explore,
-    active: exploreFill,
-    linkTo: '/explore',
-    width: 28,
-    alt: 'explore',
-  },
-  {
-    id: 4,
-    inactive: heart,
-    active: heartFill,
-    linkTo: '',
-    width: 28,
-    alt: 'likes',
-  },
-  {
-    id: 5,
-    inactive: user,
-    active: userFill,
-    linkTo: '/profile',
-    width: 28,
-    alt: 'profile',
-  },
-];
-
 export const Header: React.FC = () => {
+  const currentUser = auth.currentUser?.uid;
+  const data = [
+    {
+      id: 0,
+      inactive: home,
+      active: homeFill,
+      linkTo: '/',
+      width: 28,
+      alt: 'home',
+    },
+    {
+      id: 1,
+      inactive: messenger,
+      active: messengerFill,
+      linkTo: '/direct/inbox',
+      width: 28,
+      alt: 'messages',
+    },
+    {
+      id: 2,
+      inactive: add,
+      active: addFill,
+      linkTo: '/new-post',
+      width: 28,
+      alt: 'new-post',
+    },
+    {
+      id: 3,
+      inactive: explore,
+      active: exploreFill,
+      linkTo: '/explore',
+      width: 28,
+      alt: 'explore',
+    },
+    {
+      id: 4,
+      inactive: heart,
+      active: heartFill,
+      linkTo: '',
+      width: 28,
+      alt: 'likes',
+    },
+    {
+      id: 5,
+      inactive: user,
+      active: userFill,
+      linkTo: `/${currentUser}`,
+      width: 28,
+      alt: 'profile',
+    },
+  ];
   const [active, setActive] = useState(0);
 
   const onActiveChange = (index: number) => () => {

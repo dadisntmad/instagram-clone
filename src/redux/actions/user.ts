@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { db } from '../../firebase';
-import { setUser, setUsers } from '../slices/user';
+import { setSearchingUsers, setUser, setUsers } from '../slices/user';
 
 export const fetchUsers = createAsyncThunk('user/fetchUsers', async (user: string, thunkAPI) => {
   try {
@@ -40,7 +40,7 @@ export const fetchSearchingUsers = createAsyncThunk(
         .get()
         .then((querySnapshot) => {
           thunkAPI.dispatch(
-            setUsers(
+            setSearchingUsers(
               querySnapshot.docs.map((doc) => ({
                 uid: doc.id,
                 email: doc.data()?.email,

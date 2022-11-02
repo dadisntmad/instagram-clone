@@ -1,17 +1,20 @@
 import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { ProfileImage } from '../../components/ProfileImage/ProfileImage';
 import { useAppDispatch } from '../../redux/store';
 import { useSelector } from 'react-redux';
 import { selectPost, selectUser } from '../../selectors/selectors';
 import { auth } from '../../firebase';
-
-import styles from './Profile.module.scss';
 import { UserPost } from '../../components/UserPost/UserPost';
 import { fetchUser } from '../../redux/actions/user';
 import { fetchUserPosts } from '../../redux/actions/post';
 
+import styles from './Profile.module.scss';
+
 export const Profile: React.FC = () => {
   const dispatch = useAppDispatch();
+
+  const { id } = useParams();
 
   const { user } = useSelector(selectUser);
   const { posts } = useSelector(selectPost);
@@ -19,12 +22,14 @@ export const Profile: React.FC = () => {
   const currentUser = auth.currentUser?.uid;
 
   useEffect(() => {
-    dispatch(fetchUser(String(currentUser)));
-  }, []);
-
-  useEffect(() => {
-    dispatch(fetchUserPosts(String(currentUser)));
-  }, []);
+    if (id !== currentUser) {
+      dispatch(fetchUser(String(id)));
+      dispatch(fetchUserPosts(String(id)));
+    } else {
+      dispatch(fetchUser(String(currentUser)));
+      dispatch(fetchUserPosts(String(currentUser)));
+    }
+  }, [id]);
 
   return (
     <div className={styles.profile}>

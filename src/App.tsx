@@ -30,7 +30,7 @@ function App() {
       <Routes>
         <Route path="/" element={isLoggedIn ? <Home /> : <SignIn />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/:id" element={<Profile />} />
         <Route path="/direct/inbox" element={<Messages />} />
         <Route path="/explore/people" element={<People />} />
         <Route path="/explore" element={<Explore />} />

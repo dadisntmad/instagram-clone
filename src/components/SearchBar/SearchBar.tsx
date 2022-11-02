@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { fetchSearchingUsers } from '../../redux/actions/user';
 import { useAppDispatch } from '../../redux/store';
@@ -13,8 +14,9 @@ type PopupClick = MouseEvent & {
 
 export const SearchBar: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState('');
-  const { users } = useSelector(selectUser);
+  const { searchingUsers } = useSelector(selectUser);
 
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -34,6 +36,11 @@ export const SearchBar: React.FC = () => {
 
     return () => document.body.removeEventListener('click', handleClickOutside);
   }, []);
+
+  const onNavigateToUser = (uid: string) => () => {
+    navigate(`/${uid}`);
+    onInputClear();
+  };
 
   return (
     <>
@@ -72,8 +79,8 @@ export const SearchBar: React.FC = () => {
       </div>
       {searchValue && (
         <div className={styles.modal} ref={modalRef}>
-          {users.map((user) => (
-            <div className={styles.user} key={user.uid}>
+          {searchingUsers.map((user) => (
+            <div className={styles.user} key={user.uid} onClick={onNavigateToUser(user.uid)}>
               <ProfileImage size={45} imageUrl={user.imageUrl} />
               <p>{user.username}</p>
             </div>

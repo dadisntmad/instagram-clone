@@ -40,7 +40,7 @@ export const SignUp: React.FC = () => {
       .createUserWithEmailAndPassword(email, password)
       .then((userCredential) => {
         const data: User = {
-          uid: userCredential.user?.uid,
+          uid: String(userCredential.user?.uid),
           email,
           fullName,
           username,
