@@ -8,12 +8,13 @@ import styles from './UserPost.module.scss';
 type UserPostProps = {
   uid: string;
   postUrl: string;
-  likes: User[];
+  likes: string[];
   username: string;
   profileImage: string;
   datePublished: FirestoreDate;
   description: string;
   postId: string;
+  isLiked: boolean;
 };
 
 export const UserPost: React.FC<UserPostProps> = ({
@@ -25,6 +26,7 @@ export const UserPost: React.FC<UserPostProps> = ({
   datePublished,
   description,
   postId,
+  isLiked,
 }) => {
   const [isOpened, setIsOpened] = useState(false);
 
@@ -50,6 +52,7 @@ export const UserPost: React.FC<UserPostProps> = ({
           description={description}
           postId={postId}
           uid={uid}
+          isLiked={isLiked}
         />
       )}
       <div className={styles.post} onClick={onOpenModal}>

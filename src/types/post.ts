@@ -10,7 +10,8 @@ export type Post = {
   profileImage: string;
   postUrl: string;
   postId: string;
-  likes: User[];
+  likes: string[];
+  isLiked: boolean;
   description: string;
   datePublished: FirestoreDate;
 };
