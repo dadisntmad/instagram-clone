@@ -3,6 +3,7 @@ import { Comment, CommentSliceState } from '../../types/comment';
 
 const initialState: CommentSliceState = {
   comments: [],
+  text: '',
 };
 
 const commentSlice = createSlice({
@@ -12,9 +13,12 @@ const commentSlice = createSlice({
     setComments(state, action: PayloadAction<Comment[]>) {
       state.comments = action.payload;
     },
+    setText(state, action: PayloadAction<string>) {
+      state.text = action.payload;
+    },
   },
 });
 
-export const { setComments } = commentSlice.actions;
+export const { setComments, setText } = commentSlice.actions;
 
 export default commentSlice.reducer;

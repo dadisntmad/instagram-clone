@@ -9,12 +9,13 @@ export const fetchComments = createAsyncThunk(
       db.collection('posts')
         .doc(postId)
         .collection('comments')
+        .orderBy('datePublished', 'desc')
         .get()
         .then((querySnapshot) => {
           thunkAPI.dispatch(
             setComments(
               querySnapshot.docs.map((doc) => ({
-                uid: doc.id,
+                uid: doc.data().uid,
                 commentId: doc.id,
                 text: doc.data().text,
                 profilePic: doc.data().profilePic,

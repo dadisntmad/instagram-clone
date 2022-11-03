@@ -6,8 +6,11 @@ import { FirestoreDate } from '../../types/post';
 import { useSelector } from 'react-redux';
 import { selectComment } from '../../selectors/selectors';
 import { useAppDispatch } from '../../redux/store';
-import { auth } from '../../firebase';
+import { auth, db } from '../../firebase';
 import { fetchComments } from '../../redux/actions/comment';
+import { setText } from '../../redux/slices/comment';
+import { v4 as uuidv4 } from 'uuid';
+import firebase from 'firebase/app';
 import moment from 'moment';
 
 import dots from '../../assets/dots.png';
@@ -48,9 +51,10 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   const [menuOpened, setMenuOpened] = useState(false);
 
-  const { comments } = useSelector(selectComment);
+  const { comments, text } = useSelector(selectComment);
 
   const currentUser = auth.currentUser?.uid;
+  const commentId = uuidv4();
 
   useEffect(() => {
     if (isOpened) {
@@ -70,6 +74,23 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   const onCloseMenu = () => {
     setMenuOpened(false);
+  };
+
+  const onTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setText(e.target.value));
+  };
+
+  const postComment = async () => {
+    const data = {
+      commentId,
+      text,
+      uid: currentUser,
+      name: username,
+      profilePic: profileImage,
+      datePublished: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+    await db.collection('posts').doc(postId).collection('comments').doc(commentId).set(data);
+    dispatch(setText(''));
   };
 
   return (
@@ -146,8 +167,13 @@ export const PostModal: React.FC<PostModalProps> = ({
               <p className={styles.date}>{moment(datePublished.seconds * 1000).format('MMMM D')}</p>
               <div className={styles.form}>
                 <img src={smiley} alt="smiley-face" />
-                <input type="text" placeholder="Add a comment..." />
-                <button>Post</button>
+                <input
+                  type="text"
+                  placeholder="Add a comment..."
+                  value={text}
+                  onChange={onTextChange}
+                />
+                <button onClick={postComment}>Post</button>
               </div>
             </div>
           </div>

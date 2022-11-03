@@ -2,6 +2,7 @@ import { FirestoreDate } from './post';
 
 export type CommentSliceState = {
   comments: Comment[];
+  text: string;
 };
 
 export type Comment = {
