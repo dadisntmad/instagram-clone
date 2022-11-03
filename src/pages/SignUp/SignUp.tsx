@@ -45,7 +45,7 @@ export const SignUp: React.FC = () => {
           fullName,
           username,
           imageUrl: '',
-          bio: '',
+          isFollowing: false,
           following: [],
           followers: [],
         };

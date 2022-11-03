@@ -4,12 +4,13 @@ import { ProfileImage } from '../../components/ProfileImage/ProfileImage';
 import { useAppDispatch } from '../../redux/store';
 import { useSelector } from 'react-redux';
 import { selectPost, selectUser } from '../../selectors/selectors';
-import { auth } from '../../firebase';
+import { auth, db } from '../../firebase';
 import { UserPost } from '../../components/UserPost/UserPost';
 import { fetchUser } from '../../redux/actions/user';
 import { fetchUserPosts } from '../../redux/actions/post';
 
 import styles from './Profile.module.scss';
+import firebase from 'firebase/app';
 
 export const Profile: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -21,7 +22,7 @@ export const Profile: React.FC = () => {
 
   const currentUser = auth.currentUser?.uid;
 
-  useEffect(() => {
+  const fetchUserData = () => {
     if (id !== currentUser) {
       dispatch(fetchUser(String(id)));
       dispatch(fetchUserPosts(String(id)));
@@ -29,7 +30,49 @@ export const Profile: React.FC = () => {
       dispatch(fetchUser(String(currentUser)));
       dispatch(fetchUserPosts(String(currentUser)));
     }
+  };
+
+  useEffect(() => {
+    fetchUserData();
   }, [id]);
+
+  const follow = (uid: string, followId: string) => async () => {
+    await db
+      .collection('users')
+      .doc(followId)
+      .update({
+        followers: firebase.firestore.FieldValue.arrayUnion(uid),
+        isFollowing: true,
+      });
+
+    await db
+      .collection('users')
+      .doc(uid)
+      .update({
+        following: firebase.firestore.FieldValue.arrayUnion(followId),
+        isFollowing: true,
+      });
+    fetchUserData();
+  };
+
+  const unfollow = (uid: string, followId: string) => async () => {
+    await db
+      .collection('users')
+      .doc(followId)
+      .update({
+        followers: firebase.firestore.FieldValue.arrayRemove(uid),
+        isFollowing: false,
+      });
+
+    await db
+      .collection('users')
+      .doc(uid)
+      .update({
+        following: firebase.firestore.FieldValue.arrayRemove(followId),
+        isFollowing: false,
+      });
+    fetchUserData();
+  };
 
   return (
     <div className={styles.profile}>
@@ -46,7 +89,15 @@ export const Profile: React.FC = () => {
               ) : (
                 <div className={styles.profileContentButtons}>
                   <button className={styles.profileContentButton}>Message</button>
-                  <button className={styles.profileContentFollow}>Follow</button>
+                  <button
+                    className={styles.profileContentFollow}
+                    onClick={
+                      user.isFollowing
+                        ? unfollow(String(currentUser), String(id))
+                        : follow(String(currentUser), String(id))
+                    }>
+                    {user.isFollowing ? 'Unfollow' : 'Follow'}
+                  </button>
                 </div>
               )}
             </div>
@@ -62,7 +113,7 @@ export const Profile: React.FC = () => {
                 <span>{user.following?.length}</span> following
               </p>
             </div>
-            <p className={styles.bio}>{user.bio}</p>
+            <p className={styles.bio}>{user.fullName}</p>
           </div>
         </div>
         <div className={styles.posts}>

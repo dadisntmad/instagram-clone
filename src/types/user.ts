@@ -10,7 +10,7 @@ export type User = {
   fullName: string;
   username: string;
   imageUrl: string;
-  bio: string;
+  isFollowing: boolean;
   following: Follow[];
   followers: Follow[];
 };

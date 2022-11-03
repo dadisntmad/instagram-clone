@@ -35,7 +35,7 @@ export const Suggestions: React.FC = () => {
           <ProfileImage size={64} imageUrl={user?.imageUrl} />
           <div>
             <p className={styles.username}>{user?.username}</p>
-            <p className={styles.name}>{user?.bio}</p>
+            <p className={styles.name}>{user?.fullName}</p>
           </div>
         </div>
         <button onClick={signOut}>Sign Out</button>

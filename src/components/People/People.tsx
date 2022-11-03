@@ -29,7 +29,7 @@ export const People: React.FC = () => {
               <ProfileImage size={45} imageUrl={user.imageUrl} />
               <div>
                 <p className={styles.username}>{user.username}</p>
-                <p className={styles.name}>{user.bio}</p>
+                <p className={styles.name}>{user.fullName}</p>
               </div>
             </div>
             <button>Follow</button>
