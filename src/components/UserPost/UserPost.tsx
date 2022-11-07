@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { auth } from '../../firebase';
+import { fetchUser } from '../../redux/actions/user';
+import { useAppDispatch } from '../../redux/store';
 import { FirestoreDate } from '../../types/post';
-import { User } from '../../types/user';
 import { PostModal } from '../PostModal/PostModal';
 
 import styles from './UserPost.module.scss';
@@ -9,6 +11,7 @@ type UserPostProps = {
   uid: string;
   postUrl: string;
   likes: string[];
+  comments: string[];
   username: string;
   profileImage: string;
   datePublished: FirestoreDate;
@@ -21,6 +24,7 @@ export const UserPost: React.FC<UserPostProps> = ({
   uid,
   postUrl,
   likes,
+  comments,
   username,
   profileImage,
   datePublished,
@@ -28,14 +32,19 @@ export const UserPost: React.FC<UserPostProps> = ({
   postId,
   isLiked,
 }) => {
+  const dispatch = useAppDispatch();
   const [isOpened, setIsOpened] = useState(false);
+
+  const currentUser = auth.currentUser?.uid;
 
   const onOpenModal = () => {
     setIsOpened(true);
+    dispatch(fetchUser(String(currentUser)));
   };
 
   const onCloseModal = () => {
     setIsOpened(false);
+    dispatch(fetchUser(uid));
   };
 
   return (
@@ -82,7 +91,7 @@ export const UserPost: React.FC<UserPostProps> = ({
                 fill="white"
               />
             </svg>
-            <p>{likes.length}</p>
+            <p>{comments.length}</p>
           </div>
         </div>
       </div>

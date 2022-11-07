@@ -6,11 +6,10 @@ export const fetchUsers = createAsyncThunk('user/fetchUsers', async (user: strin
   try {
     db.collection('users')
       .where('uid', '!=', user)
-      .get()
-      .then((querySnapshot) => {
+      .onSnapshot((snapshot) => {
         thunkAPI.dispatch(
           setUsers(
-            querySnapshot.docs.map((doc) => ({
+            snapshot.docs.map((doc) => ({
               uid: doc.id,
               email: doc.data()?.email,
               fullName: doc.data()?.fullName,
@@ -22,9 +21,6 @@ export const fetchUsers = createAsyncThunk('user/fetchUsers', async (user: strin
             })),
           ),
         );
-      })
-      .catch((e) => {
-        console.log(e);
       });
   } catch (error) {
     console.log(error);
@@ -36,7 +32,7 @@ export const fetchSearchingUsers = createAsyncThunk(
   async (searchValue: string, thunkAPI) => {
     try {
       db.collection('users')
-        .where('username', '>=', searchValue)
+        .where('username', '>=', searchValue.toLowerCase())
         .get()
         .then((querySnapshot) => {
           thunkAPI.dispatch(

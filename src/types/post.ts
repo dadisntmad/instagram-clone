@@ -1,5 +1,3 @@
-import { User } from './user';
-
 export type PostSliceState = {
   posts: Post[];
 };
@@ -11,6 +9,7 @@ export type Post = {
   postUrl: string;
   postId: string;
   likes: string[];
+  comments: string[];
   isLiked: boolean;
   description: string;
   datePublished: FirestoreDate;

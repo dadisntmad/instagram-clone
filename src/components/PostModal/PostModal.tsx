@@ -3,7 +3,7 @@ import { MenuModal } from '../MenuModal/MenuModal';
 import { ProfileImage } from '../ProfileImage/ProfileImage';
 import { FirestoreDate } from '../../types/post';
 import { useSelector } from 'react-redux';
-import { selectComment } from '../../selectors/selectors';
+import { selectComment, selectUser } from '../../selectors/selectors';
 import { useAppDispatch } from '../../redux/store';
 import { auth, db } from '../../firebase';
 import { fetchComments } from '../../redux/actions/comment';
@@ -54,6 +54,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   const [menuOpened, setMenuOpened] = useState(false);
 
   const { comments, text } = useSelector(selectComment);
+  const { user } = useSelector(selectUser);
 
   const currentUser = auth.currentUser?.uid;
   const commentId = uuidv4();
@@ -62,7 +63,7 @@ export const PostModal: React.FC<PostModalProps> = ({
     if (isOpened) {
       document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = 'scroll';
     }
   }, []);
 
@@ -86,12 +87,19 @@ export const PostModal: React.FC<PostModalProps> = ({
     const data = {
       commentId,
       text,
-      uid: currentUser,
-      name: username,
-      profilePic: profileImage,
-      datePublished: firebase.firestore.FieldValue.serverTimestamp(),
+      uid: user?.uid,
+      name: user?.username,
+      profilePic: user?.imageUrl,
+      datePublished: new Date(),
     };
-    await db.collection('posts').doc(postId).collection('comments').doc(commentId).set(data);
+
+    await db
+      .collection('posts')
+      .doc(postId)
+      .update({
+        comments: firebase.firestore.FieldValue.arrayUnion(data),
+      });
+
     dispatch(setText(''));
   };
 
@@ -140,7 +148,7 @@ export const PostModal: React.FC<PostModalProps> = ({
           <img
             src={postUrl}
             alt="post"
-            onClick={
+            onDoubleClick={
               isLiked
                 ? dislikePost(postId, String(currentUser))
                 : likePost(postId, String(currentUser))
@@ -209,7 +217,9 @@ export const PostModal: React.FC<PostModalProps> = ({
                   value={text}
                   onChange={onTextChange}
                 />
-                <button onClick={postComment}>Post</button>
+                <button onClick={postComment} disabled={!text}>
+                  Post
+                </button>
               </div>
             </div>
           </div>

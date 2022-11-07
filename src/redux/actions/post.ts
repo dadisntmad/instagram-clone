@@ -15,6 +15,7 @@ export const fetchPosts = createAsyncThunk('post/fetchPosts', async (_, thunkAPI
               profileImage: doc.data().profileImage,
               postUrl: doc.data().postUrl,
               postId: doc.data().postId,
+              comments: doc.data().comments,
               likes: doc.data().likes,
               isLiked: doc.data().isLiked,
               description: doc.data().description,
@@ -36,16 +37,16 @@ export const fetchUserPosts = createAsyncThunk(
       db.collection('posts')
         .where('uid', '==', uid)
         .orderBy('datePublished', 'desc')
-        .get()
-        .then((querySnapshot) => {
+        .onSnapshot((snapshot) => {
           thunkAPI.dispatch(
             setPosts(
-              querySnapshot.docs.map((doc) => ({
+              snapshot.docs.map((doc) => ({
                 uid: doc.data().uid,
                 username: doc.data().username,
                 profileImage: doc.data().profileImage,
                 postUrl: doc.data().postUrl,
                 postId: doc.data().postId,
+                comments: doc.data().comments,
                 likes: doc.data().likes,
                 isLiked: doc.data().isLiked,
                 description: doc.data().description,
@@ -53,8 +54,7 @@ export const fetchUserPosts = createAsyncThunk(
               })),
             ),
           );
-        })
-        .catch((e) => console.log(e));
+        });
     } catch (error) {
       console.log(error);
     }

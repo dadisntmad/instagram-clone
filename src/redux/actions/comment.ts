@@ -8,25 +8,17 @@ export const fetchComments = createAsyncThunk(
     try {
       db.collection('posts')
         .doc(postId)
-        .collection('comments')
-        .orderBy('datePublished', 'desc')
-        .get()
-        .then((querySnapshot) => {
+        .onSnapshot((snap) => {
           thunkAPI.dispatch(
             setComments(
-              querySnapshot.docs.map((doc) => ({
-                uid: doc.data().uid,
-                commentId: doc.id,
-                text: doc.data().text,
-                profilePic: doc.data().profilePic,
-                name: doc.data().name,
-                datePublished: doc.data().datePublished,
-              })),
+              snap
+                .data()
+                ?.comments.sort(
+                  (dateA: { datePublished: number }, dateB: { datePublished: number }) =>
+                    dateB.datePublished - dateA.datePublished,
+                ),
             ),
           );
-        })
-        .catch((e) => {
-          console.log(e);
         });
     } catch (error) {
       console.log(error);

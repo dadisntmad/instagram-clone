@@ -4,13 +4,13 @@ import { ProfileImage } from '../../components/ProfileImage/ProfileImage';
 import { useAppDispatch } from '../../redux/store';
 import { useSelector } from 'react-redux';
 import { selectPost, selectUser } from '../../selectors/selectors';
-import { auth, db } from '../../firebase';
+import { auth } from '../../firebase';
 import { UserPost } from '../../components/UserPost/UserPost';
 import { fetchUser } from '../../redux/actions/user';
 import { fetchUserPosts } from '../../redux/actions/post';
+import { followUser, unfollowUser } from '../../components/utils/methods';
 
 import styles from './Profile.module.scss';
-import firebase from 'firebase/app';
 
 export const Profile: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -36,41 +36,13 @@ export const Profile: React.FC = () => {
     fetchUserData();
   }, [id]);
 
-  const follow = (uid: string, followId: string) => async () => {
-    await db
-      .collection('users')
-      .doc(followId)
-      .update({
-        followers: firebase.firestore.FieldValue.arrayUnion(uid),
-        isFollowing: true,
-      });
-
-    await db
-      .collection('users')
-      .doc(uid)
-      .update({
-        following: firebase.firestore.FieldValue.arrayUnion(followId),
-        isFollowing: true,
-      });
+  const follow = (uid: string, followId: string) => () => {
+    followUser(uid, followId);
     fetchUserData();
   };
 
-  const unfollow = (uid: string, followId: string) => async () => {
-    await db
-      .collection('users')
-      .doc(followId)
-      .update({
-        followers: firebase.firestore.FieldValue.arrayRemove(uid),
-        isFollowing: false,
-      });
-
-    await db
-      .collection('users')
-      .doc(uid)
-      .update({
-        following: firebase.firestore.FieldValue.arrayRemove(followId),
-        isFollowing: false,
-      });
+  const unfollow = (uid: string, followId: string) => () => {
+    unfollowUser(uid, followId);
     fetchUserData();
   };
 

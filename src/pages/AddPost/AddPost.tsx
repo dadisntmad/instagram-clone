@@ -3,16 +3,15 @@ import { ProfileImage } from '../../components/ProfileImage/ProfileImage';
 import { useNavigate } from 'react-router-dom';
 import firebase from 'firebase/app';
 import { auth, db, storage } from '../../firebase';
-import { User } from '../../types/user';
 import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch } from '../../redux/store';
 import { useSelector } from 'react-redux';
+import { fetchUser } from '../../redux/actions/user';
 import { selectUser } from '../../selectors/selectors';
 
 import picture from '../../assets/picture.png';
 
 import styles from './AddPost.module.scss';
-import { fetchUser } from '../../redux/actions/user';
 
 export const AddPost: React.FC = () => {
   const dispatch = useAppDispatch();
