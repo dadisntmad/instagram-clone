@@ -87,7 +87,7 @@ export const SignUp: React.FC = () => {
               className={styles.formInput}
               type="text"
               placeholder="Username"
-              value={username}
+              value={username.toLowerCase()}
               onChange={onUsernameChange}
             />
           </div>

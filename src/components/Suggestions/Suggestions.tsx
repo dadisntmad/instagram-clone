@@ -6,7 +6,7 @@ import { auth } from '../../firebase';
 import { fetchUser, fetchUsers } from '../../redux/actions/user';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../selectors/selectors';
-import { followUser, unfollowUser } from '../utils/methods';
+import { followUnfollow } from '../utils/methods';
 
 import styles from './Suggestions.module.scss';
 
@@ -28,14 +28,6 @@ export const Suggestions: React.FC = () => {
   useEffect(() => {
     dispatch(fetchUsers(String(currentUser)));
   }, []);
-
-  const follow = (uid: string, followId: string) => async () => {
-    followUser(uid, followId);
-  };
-
-  const unfollow = (uid: string, followId: string) => async () => {
-    unfollowUser(uid, followId);
-  };
 
   return (
     <div className={styles.root}>
@@ -64,16 +56,11 @@ export const Suggestions: React.FC = () => {
               <ProfileImage size={40} imageUrl={user.imageUrl} />
               <div>
                 <p className={styles.username}>{user.username}</p>
-                <p className={styles.name}>{user.username}</p>
+                <p className={styles.name}>{user.fullName}</p>
               </div>
             </div>
           </Link>
-          <button
-            onClick={
-              user.isFollowing
-                ? unfollow(String(currentUser), user.uid)
-                : follow(String(currentUser), user.uid)
-            }>
+          <button onClick={() => followUnfollow(String(currentUser), user.uid)}>
             {user.isFollowing ? 'Unfollow' : 'Follow'}
           </button>
         </div>

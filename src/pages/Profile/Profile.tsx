@@ -8,7 +8,7 @@ import { auth } from '../../firebase';
 import { UserPost } from '../../components/UserPost/UserPost';
 import { fetchUser } from '../../redux/actions/user';
 import { fetchUserPosts } from '../../redux/actions/post';
-import { followUser, unfollowUser } from '../../components/utils/methods';
+import { followUnfollow } from '../../components/utils/methods';
 
 import styles from './Profile.module.scss';
 
@@ -36,13 +36,8 @@ export const Profile: React.FC = () => {
     fetchUserData();
   }, [id]);
 
-  const follow = (uid: string, followId: string) => () => {
-    followUser(uid, followId);
-    fetchUserData();
-  };
-
-  const unfollow = (uid: string, followId: string) => () => {
-    unfollowUser(uid, followId);
+  const followUnfollowUser = (uid: string, followId: string) => async () => {
+    await followUnfollow(uid, followId);
     fetchUserData();
   };
 
@@ -63,11 +58,7 @@ export const Profile: React.FC = () => {
                   <button className={styles.profileContentButton}>Message</button>
                   <button
                     className={styles.profileContentFollow}
-                    onClick={
-                      user.isFollowing
-                        ? unfollow(String(currentUser), String(id))
-                        : follow(String(currentUser), String(id))
-                    }>
+                    onClick={followUnfollowUser(String(currentUser), user.uid)}>
                     {user.isFollowing ? 'Unfollow' : 'Follow'}
                   </button>
                 </div>

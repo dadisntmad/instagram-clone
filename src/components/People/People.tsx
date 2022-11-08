@@ -6,7 +6,7 @@ import { fetchUsers } from '../../redux/actions/user';
 import { useAppDispatch } from '../../redux/store';
 import { selectUser } from '../../selectors/selectors';
 import { ProfileImage } from '../ProfileImage/ProfileImage';
-import { followUser, unfollowUser } from '../utils/methods';
+import { followUnfollow } from '../utils/methods';
 
 import styles from './People.module.scss';
 
@@ -20,14 +20,6 @@ export const People: React.FC = () => {
   useEffect(() => {
     dispatch(fetchUsers(String(currentUser)));
   }, []);
-
-  const follow = (uid: string, followId: string) => () => {
-    followUser(uid, followId);
-  };
-
-  const unfollow = (uid: string, followId: string) => () => {
-    unfollowUser(uid, followId);
-  };
 
   return (
     <div className={styles.root}>
@@ -44,12 +36,7 @@ export const People: React.FC = () => {
                 </div>
               </div>
             </Link>
-            <button
-              onClick={
-                user.isFollowing
-                  ? unfollow(String(currentUser), user.uid)
-                  : follow(String(currentUser), user.uid)
-              }>
+            <button onClick={() => followUnfollow(String(currentUser), user.uid)}>
               {user.isFollowing ? 'Unfollow' : 'Follow'}
             </button>
           </div>

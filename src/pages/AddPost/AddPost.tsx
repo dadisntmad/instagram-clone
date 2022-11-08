@@ -47,7 +47,7 @@ export const AddPost: React.FC = () => {
     const taskCompleted = () => {
       task.snapshot.ref.getDownloadURL().then((snapshot) => {
         onSavePost(snapshot);
-        navigate('/profile');
+        navigate(`/${currentUser}`);
         setCaption('');
         setFile(null);
       });
@@ -103,7 +103,7 @@ export const AddPost: React.FC = () => {
                 value={caption}
                 onChange={onCaptionChange}
                 className={styles.textarea}
-                cols={40}
+                cols={32}
                 rows={27}
                 maxLength={2200}
                 placeholder="Write a caption..."
