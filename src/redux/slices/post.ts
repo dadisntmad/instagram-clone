@@ -3,6 +3,7 @@ import { Post, PostSliceState } from '../../types/post';
 
 const initialState: PostSliceState = {
   posts: [],
+  userFollowingPosts: [],
 };
 
 const postSlice = createSlice({
@@ -12,9 +13,12 @@ const postSlice = createSlice({
     setPosts(state, action: PayloadAction<Post[]>) {
       state.posts = action.payload;
     },
+    setUserFollowingPosts(state, action: PayloadAction<Post[]>) {
+      state.userFollowingPosts = action.payload;
+    },
   },
 });
 
-export const { setPosts } = postSlice.actions;
+export const { setPosts, setUserFollowingPosts } = postSlice.actions;
 
 export default postSlice.reducer;

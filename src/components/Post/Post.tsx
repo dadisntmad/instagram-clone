@@ -1,5 +1,7 @@
 import React from 'react';
 import { ProfileImage } from '../ProfileImage/ProfileImage';
+import { FirestoreDate } from '../../types/post';
+import moment from 'moment';
 
 import dots from '../../assets/dots.png';
 import heart from '../../assets/heart.png';
@@ -10,23 +12,40 @@ import smiley from '../../assets/smiley.png';
 
 import styles from './Post.module.scss';
 
-export const Post: React.FC = () => {
+type PostProps = {
+  uid: string;
+  postUrl: string;
+  likes: string[];
+  comments: string[];
+  username: string;
+  profileImage: string;
+  datePublished: FirestoreDate;
+  description: string;
+  postId: string;
+  isLiked: boolean;
+};
+
+export const Post: React.FC<PostProps> = ({
+  postUrl,
+  likes,
+  comments,
+  username,
+  profileImage,
+  datePublished,
+  description,
+}) => {
   return (
     <div className={styles.root}>
       <div className={styles.header}>
         <div className={styles.headerUsername}>
-          <ProfileImage size={35} />
-          <p>username</p>
+          <ProfileImage size={35} imageUrl={profileImage} />
+          <p>{username}</p>
         </div>
         <button>
           <img src={dots} alt="menu" />
         </button>
       </div>
-      <img
-        className={styles.image}
-        src="https://images.unsplash.com/photo-1666017686492-cc404aae890e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
-        alt="user-post"
-      />
+      <img className={styles.image} src={postUrl} alt="user-post" />
       <div className={styles.footer}>
         <div className={styles.footerActions}>
           <div className={styles.footerButtons}>
@@ -44,13 +63,13 @@ export const Post: React.FC = () => {
             <img src={bookmark} alt="bookmark" />
           </button>
         </div>
-        <p className={styles.likesCount}>17 likes</p>
+        <p className={styles.likesCount}>{likes.length} likes</p>
         <div className={styles.author}>
-          <p className={styles.authorUsername}>username</p>
-          <p className={styles.authorComment}>comment</p>
+          <p className={styles.authorUsername}>{username}</p>
+          <p className={styles.authorComment}>{description}</p>
         </div>
-        <button className={styles.viewCommentButton}>View all 3 comments</button>
-        <p className={styles.date}>october 18</p>
+        <button className={styles.viewCommentButton}>View all {comments.length} comments</button>
+        <p className={styles.date}>{moment(datePublished.seconds * 1000).format('MMMM D')}</p>
         <div className={styles.comment}>
           <img src={smiley} alt="emoji" />
           <input type="text" placeholder="Add a comment..." />

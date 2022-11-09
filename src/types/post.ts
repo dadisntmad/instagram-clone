@@ -1,5 +1,6 @@
 export type PostSliceState = {
   posts: Post[];
+  userFollowingPosts: Post[];
 };
 
 export type Post = {

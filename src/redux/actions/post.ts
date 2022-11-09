@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { db } from '../../firebase';
-import { setPosts } from '../slices/post';
+import { setPosts, setUserFollowingPosts } from '../slices/post';
 
 export const fetchPosts = createAsyncThunk('post/fetchPosts', async (_, thunkAPI) => {
   try {
@@ -41,6 +41,38 @@ export const fetchUserPosts = createAsyncThunk(
           thunkAPI.dispatch(
             setPosts(
               snapshot.docs.map((doc) => ({
+                uid: doc.data().uid,
+                username: doc.data().username,
+                profileImage: doc.data().profileImage,
+                postUrl: doc.data().postUrl,
+                postId: doc.data().postId,
+                comments: doc.data().comments,
+                likes: doc.data().likes,
+                isLiked: doc.data().isLiked,
+                description: doc.data().description,
+                datePublished: doc.data().datePublished,
+              })),
+            ),
+          );
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+);
+
+export const fetchUserFollowingPosts = createAsyncThunk(
+  'post/fetchUserFollowingPosts',
+  async (uid: string, thunkAPI) => {
+    try {
+      db.collection('following_posts')
+        .doc(uid)
+        .collection('user_post')
+        .orderBy('datePublished', 'desc')
+        .onSnapshot((doc) => {
+          thunkAPI.dispatch(
+            setUserFollowingPosts(
+              doc.docs.map((doc) => ({
                 uid: doc.data().uid,
                 username: doc.data().username,
                 profileImage: doc.data().profileImage,

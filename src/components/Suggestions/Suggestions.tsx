@@ -6,7 +6,7 @@ import { auth } from '../../firebase';
 import { fetchUser, fetchUsers } from '../../redux/actions/user';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../selectors/selectors';
-import { followUnfollow } from '../utils/methods';
+import { followUnfollow } from '../../utils/methods';
 
 import styles from './Suggestions.module.scss';
 

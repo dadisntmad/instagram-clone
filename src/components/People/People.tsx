@@ -6,7 +6,7 @@ import { fetchUsers } from '../../redux/actions/user';
 import { useAppDispatch } from '../../redux/store';
 import { selectUser } from '../../selectors/selectors';
 import { ProfileImage } from '../ProfileImage/ProfileImage';
-import { followUnfollow } from '../utils/methods';
+import { followUnfollow } from '../../utils/methods';
 
 import styles from './People.module.scss';
 

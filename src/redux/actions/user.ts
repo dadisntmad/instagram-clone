@@ -5,7 +5,7 @@ import { setSearchingUsers, setUser, setUsers } from '../slices/user';
 export const fetchUsers = createAsyncThunk('user/fetchUsers', async (user: string, thunkAPI) => {
   try {
     db.collection('users')
-      .where('uid', '!=', user)
+      .where('uid', 'not-in', ['following', user])
       .onSnapshot((snapshot) => {
         thunkAPI.dispatch(
           setUsers(
