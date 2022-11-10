@@ -7,7 +7,7 @@ import { selectPost, selectUser } from '../../selectors/selectors';
 import { auth } from '../../firebase';
 import { UserPost } from '../../components/UserPost/UserPost';
 import { fetchUser } from '../../redux/actions/user';
-import { fetchUserFollowingPosts, fetchUserPosts } from '../../redux/actions/post';
+import { fetchUserPosts } from '../../redux/actions/post';
 import { followUnfollow } from '../../utils/methods';
 
 import styles from './Profile.module.scss';
@@ -26,11 +26,9 @@ export const Profile: React.FC = () => {
     if (id !== currentUser) {
       dispatch(fetchUser(String(id)));
       dispatch(fetchUserPosts(String(id)));
-      dispatch(fetchUserFollowingPosts(String(id)));
     } else {
       dispatch(fetchUser(String(currentUser)));
       dispatch(fetchUserPosts(String(currentUser)));
-      dispatch(fetchUserFollowingPosts(String(currentUser)));
     }
   };
 

@@ -13,6 +13,7 @@ export type User = {
   isFollowing: boolean;
   following: Follow[];
   followers: Follow[];
+  followingPosts: [];
 };
 
 type Follow = {

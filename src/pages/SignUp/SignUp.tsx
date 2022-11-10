@@ -48,6 +48,7 @@ export const SignUp: React.FC = () => {
           isFollowing: false,
           following: [],
           followers: [],
+          followingPosts: [],
         };
 
         db.collection('users').doc(userCredential.user?.uid).set(data);

@@ -65,27 +65,18 @@ export const fetchUserFollowingPosts = createAsyncThunk(
   'post/fetchUserFollowingPosts',
   async (uid: string, thunkAPI) => {
     try {
-      db.collection('following_posts')
+      db.collection('users')
         .doc(uid)
-        .collection('user_post')
-        .orderBy('datePublished', 'desc')
-        .onSnapshot((doc) => {
-          thunkAPI.dispatch(
-            setUserFollowingPosts(
-              doc.docs.map((doc) => ({
-                uid: doc.data().uid,
-                username: doc.data().username,
-                profileImage: doc.data().profileImage,
-                postUrl: doc.data().postUrl,
-                postId: doc.data().postId,
-                comments: doc.data().comments,
-                likes: doc.data().likes,
-                isLiked: doc.data().isLiked,
-                description: doc.data().description,
-                datePublished: doc.data().datePublished,
-              })),
-            ),
-          );
+        .get()
+        .then((doc) => {
+          const posts = doc
+            .data()
+            ?.followingPosts.sort(
+              (dateA: { datePublished: number }, dateB: { datePublished: number }) =>
+                dateB.datePublished - dateA.datePublished,
+            );
+
+          thunkAPI.dispatch(setUserFollowingPosts(posts));
         });
     } catch (error) {
       console.log(error);

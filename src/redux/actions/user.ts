@@ -18,6 +18,7 @@ export const fetchUsers = createAsyncThunk('user/fetchUsers', async (user: strin
               isFollowing: doc.data()?.isFollowing,
               followers: doc.data()?.followers,
               following: doc.data()?.following,
+              followingPosts: doc.data()?.followingPosts,
             })),
           ),
         );
@@ -46,6 +47,7 @@ export const fetchSearchingUsers = createAsyncThunk(
                 isFollowing: doc.data().isFollowing,
                 followers: doc.data()?.followers,
                 following: doc.data()?.following,
+                followingPosts: doc.data()?.followingPosts,
               })),
             ),
           );
@@ -76,6 +78,7 @@ export const fetchUser = createAsyncThunk('user/fetchUser', async (uid: string, 
               isFollowing: doc.data()?.isFollowing,
               followers: doc.data()?.followers,
               following: doc.data()?.following,
+              followingPosts: doc.data()?.followingPosts,
             }),
           );
         }

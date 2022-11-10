@@ -58,9 +58,19 @@ export const followUnfollow = async (uid: string, followId: string, posts?: Post
       };
 
       if (following.includes(followId)) {
-        await db.collection('following_posts').doc(uid).delete();
+        await db
+          .collection('users')
+          .doc(uid)
+          .update({
+            followingPosts: firebase.firestore.FieldValue.arrayRemove(data),
+          });
       } else {
-        await db.collection('following_posts').doc(uid).collection('user_post').add(data);
+        await db
+          .collection('users')
+          .doc(uid)
+          .update({
+            followingPosts: firebase.firestore.FieldValue.arrayUnion(data),
+          });
       }
     });
   };
