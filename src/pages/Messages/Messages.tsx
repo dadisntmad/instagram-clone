@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ProfileImage } from '../../components/ProfileImage/ProfileImage';
+import { ProfileImage } from '../../components';
 import cn from 'classnames';
 
 import send from '../../assets/send.png';

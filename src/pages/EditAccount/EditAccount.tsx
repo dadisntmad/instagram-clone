@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ProfileImage } from '../../components/ProfileImage/ProfileImage';
+import { ProfileImage } from '../../components';
 import { useSelector } from 'react-redux';
 import { auth, db, storage } from '../../firebase';
 import { fetchUser } from '../../redux/actions/user';

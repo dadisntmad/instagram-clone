@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { UserPost } from '../../components/UserPost/UserPost';
+import { UserPost } from '../../components';
 import { fetchPosts } from '../../redux/actions/post';
 import { useAppDispatch } from '../../redux/store';
 import { selectPost } from '../../selectors/selectors';

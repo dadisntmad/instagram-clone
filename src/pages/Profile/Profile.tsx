@@ -1,18 +1,17 @@
 import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ProfileImage } from '../../components/ProfileImage/ProfileImage';
+import { ProfileImage, UserPost } from '../../components';
 import { useAppDispatch } from '../../redux/store';
 import { useSelector } from 'react-redux';
 import { selectPost, selectUser } from '../../selectors/selectors';
 import { auth } from '../../firebase';
-import { UserPost } from '../../components/UserPost/UserPost';
 import { fetchUser } from '../../redux/actions/user';
 import { fetchUserPosts } from '../../redux/actions/post';
 import { followUnfollow } from '../../utils/methods';
 
 import styles from './Profile.module.scss';
 
-export const Profile: React.FC = () => {
+const Profile: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const { id } = useParams();
@@ -88,3 +87,5 @@ export const Profile: React.FC = () => {
     </div>
   );
 };
+
+export default Profile;

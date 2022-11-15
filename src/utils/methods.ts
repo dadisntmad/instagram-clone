@@ -55,6 +55,7 @@ export const followUnfollow = async (uid: string, followId: string, posts?: Post
         comments: post?.comments,
         description: post?.description,
         datePublished: post.datePublished,
+        isLiked: post.isLiked,
       };
 
       if (following.includes(followId)) {

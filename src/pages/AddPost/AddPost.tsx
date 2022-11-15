@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { ProfileImage } from '../../components/ProfileImage/ProfileImage';
+import { ProfileImage } from '../../components';
 import { useNavigate } from 'react-router-dom';
 import firebase from 'firebase/app';
 import { auth, db, storage } from '../../firebase';
@@ -71,6 +71,7 @@ export const AddPost: React.FC = () => {
       comments: [],
       description: caption,
       datePublished: firebase.firestore.FieldValue.serverTimestamp(),
+      isLiked: false,
     };
 
     db.collection('posts').doc(postId).set(data);

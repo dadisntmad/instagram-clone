@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../redux/store';
 import { useSelector } from 'react-redux';
 import { selectAuth } from '../../selectors/selectors';
@@ -12,8 +12,9 @@ import logo from '../../assets/logo.png';
 
 import styles from './SignUp.module.scss';
 
-export const SignUp: React.FC = () => {
+const SignUp: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const { email, fullName, username, password } = useSelector(selectAuth);
 
@@ -52,6 +53,11 @@ export const SignUp: React.FC = () => {
         };
 
         db.collection('users').doc(userCredential.user?.uid).set(data);
+        navigate('/');
+        dispatch(setEmail(''));
+        dispatch(setFullName(''));
+        dispatch(setUsername(''));
+        dispatch(setPassword(''));
       })
       .catch((e) => {
         console.log(e);
@@ -124,3 +130,5 @@ export const SignUp: React.FC = () => {
     </div>
   );
 };
+
+export default SignUp;

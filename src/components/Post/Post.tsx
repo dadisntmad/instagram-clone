@@ -1,6 +1,7 @@
 import React from 'react';
 import { ProfileImage } from '../ProfileImage/ProfileImage';
 import { FirestoreDate } from '../../types/post';
+import { Link } from 'react-router-dom';
 import moment from 'moment';
 
 import dots from '../../assets/dots.png';
@@ -26,6 +27,7 @@ type PostProps = {
 };
 
 export const Post: React.FC<PostProps> = ({
+  uid,
   postUrl,
   likes,
   comments,
@@ -37,10 +39,12 @@ export const Post: React.FC<PostProps> = ({
   return (
     <div className={styles.root}>
       <div className={styles.header}>
-        <div className={styles.headerUsername}>
-          <ProfileImage size={35} imageUrl={profileImage} />
-          <p>{username}</p>
-        </div>
+        <Link to={`/${uid}`}>
+          <div className={styles.headerUsername}>
+            <ProfileImage size={35} imageUrl={profileImage} />
+            <p>{username}</p>
+          </div>
+        </Link>
         <button>
           <img src={dots} alt="menu" />
         </button>

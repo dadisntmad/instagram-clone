@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Post } from '../../components/Post/Post';
-import { Reels } from '../../components/Reels/Reels';
-import { Suggestions } from '../../components/Suggestions/Suggestions';
+import { Post, Reels, Suggestions } from '../../components';
 import { auth } from '../../firebase';
 import { fetchUserFollowingPosts } from '../../redux/actions/post';
 import { useAppDispatch } from '../../redux/store';

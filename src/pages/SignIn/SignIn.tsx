@@ -11,7 +11,7 @@ import logo from '../../assets/logo.png';
 
 import styles from './SignIn.module.scss';
 
-export const SignIn: React.FC = () => {
+const SignIn: React.FC = () => {
   const dispatch = useAppDispatch();
   const { email, password } = useSelector(selectAuth);
 
@@ -30,6 +30,8 @@ export const SignIn: React.FC = () => {
       .signInWithEmailAndPassword(email, password)
       .then((userCredential) => {
         console.log(`${userCredential.user?.uid} is authenticated`);
+        dispatch(setEmail(''));
+        dispatch(setPassword(''));
       })
       .catch((e) => {
         console.log(e);
@@ -84,3 +86,5 @@ export const SignIn: React.FC = () => {
     </div>
   );
 };
+
+export default SignIn;
