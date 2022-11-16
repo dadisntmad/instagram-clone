@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ProfileImage } from '../ProfileImage/ProfileImage';
 import { FirestoreDate } from '../../types/post';
 import { Link } from 'react-router-dom';
+import { likePost, postComment } from '../../utils/methods';
+import { auth } from '../../firebase';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../selectors/selectors';
+import { v4 as uuidv4 } from 'uuid';
 import moment from 'moment';
 
 import dots from '../../assets/dots.png';
 import heart from '../../assets/heart.png';
+import heartFill from '../../assets/heart_fill_red.png';
 import comment from '../../assets/comment.png';
 import send from '../../assets/send.png';
 import bookmark from '../../assets/bookmark.png';
@@ -35,7 +41,25 @@ export const Post: React.FC<PostProps> = ({
   profileImage,
   datePublished,
   description,
+  postId,
+  isLiked,
 }) => {
+  const [text, setText] = useState('');
+  const { user } = useSelector(selectUser);
+
+  const commentId = uuidv4();
+
+  const onChangeComment = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setText(e.target.value);
+  };
+
+  const onPostComment = () => {
+    postComment(String(currentUser), postId, commentId, text, user?.username, profileImage);
+    setText('');
+  };
+
+  const currentUser = auth.currentUser?.uid;
+
   return (
     <div className={styles.root}>
       <div className={styles.header}>
@@ -49,12 +73,17 @@ export const Post: React.FC<PostProps> = ({
           <img src={dots} alt="menu" />
         </button>
       </div>
-      <img className={styles.image} src={postUrl} alt="user-post" />
+      <img
+        className={styles.image}
+        src={postUrl}
+        onDoubleClick={likePost(postId, String(currentUser))}
+        alt="user-post"
+      />
       <div className={styles.footer}>
         <div className={styles.footerActions}>
           <div className={styles.footerButtons}>
-            <button>
-              <img src={heart} alt="like" />
+            <button onClick={likePost(postId, String(currentUser))}>
+              <img src={isLiked ? heartFill : heart} alt="like" />
             </button>
             <button>
               <img src={comment} alt="comment" />
@@ -67,7 +96,9 @@ export const Post: React.FC<PostProps> = ({
             <img src={bookmark} alt="bookmark" />
           </button>
         </div>
-        <p className={styles.likesCount}>{likes.length} likes</p>
+        <p className={styles.likesCount}>
+          {likes.length} {likes.length > 1 || likes.length === 0 ? ' likes' : ' like'}
+        </p>
         <div className={styles.author}>
           <p className={styles.authorUsername}>{username}</p>
           <p className={styles.authorComment}>{description}</p>
@@ -76,8 +107,15 @@ export const Post: React.FC<PostProps> = ({
         <p className={styles.date}>{moment(datePublished.seconds * 1000).format('MMMM D')}</p>
         <div className={styles.comment}>
           <img src={smiley} alt="emoji" />
-          <input type="text" placeholder="Add a comment..." />
-          <button>Post</button>
+          <input
+            type="text"
+            placeholder="Add a comment..."
+            value={text}
+            onChange={onChangeComment}
+          />
+          <button disabled={!text} onClick={onPostComment}>
+            Post
+          </button>
         </div>
       </div>
     </div>

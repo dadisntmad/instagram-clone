@@ -5,11 +5,11 @@ import { FirestoreDate } from '../../types/post';
 import { useSelector } from 'react-redux';
 import { selectComment, selectUser } from '../../selectors/selectors';
 import { useAppDispatch } from '../../redux/store';
-import { auth, db } from '../../firebase';
+import { auth } from '../../firebase';
 import { fetchComments } from '../../redux/actions/comment';
 import { setText } from '../../redux/slices/comment';
 import { v4 as uuidv4 } from 'uuid';
-import firebase from 'firebase/app';
+import { likePost, postComment } from '../../utils/methods';
 import moment from 'moment';
 
 import dots from '../../assets/dots.png';
@@ -85,44 +85,9 @@ export const PostModal: React.FC<PostModalProps> = ({
     dispatch(setText(e.target.value));
   };
 
-  const postComment = async () => {
-    const data = {
-      commentId,
-      text,
-      uid: user?.uid,
-      name: user?.username,
-      profilePic: user?.imageUrl,
-      datePublished: new Date(),
-    };
-
-    await db
-      .collection('posts')
-      .doc(postId)
-      .update({
-        comments: firebase.firestore.FieldValue.arrayUnion(data),
-      });
-
+  const onPostComment = async () => {
+    postComment(user?.uid, postId, commentId, text, user?.username, user?.imageUrl);
     dispatch(setText(''));
-  };
-
-  const likePost = (postId: string, uid: string) => async () => {
-    await db
-      .collection('posts')
-      .doc(postId)
-      .update({
-        likes: firebase.firestore.FieldValue.arrayUnion(uid),
-        isLiked: true,
-      });
-  };
-
-  const dislikePost = (postId: string, uid: string) => async () => {
-    await db
-      .collection('posts')
-      .doc(postId)
-      .update({
-        likes: firebase.firestore.FieldValue.arrayRemove(uid),
-        isLiked: false,
-      });
   };
 
   return (
@@ -147,15 +112,7 @@ export const PostModal: React.FC<PostModalProps> = ({
           <path d="M 4.7070312 3.2929688 L 3.2929688 4.7070312 L 10.585938 12 L 3.2929688 19.292969 L 4.7070312 20.707031 L 12 13.414062 L 19.292969 20.707031 L 20.707031 19.292969 L 13.414062 12 L 20.707031 4.7070312 L 19.292969 3.2929688 L 12 10.585938 L 4.7070312 3.2929688 z" />
         </svg>
         <div className={styles.modal}>
-          <img
-            src={postUrl}
-            alt="post"
-            onDoubleClick={
-              isLiked
-                ? dislikePost(postId, String(currentUser))
-                : likePost(postId, String(currentUser))
-            }
-          />
+          <img src={postUrl} alt="post" onDoubleClick={likePost(postId, String(currentUser))} />
           <div className={styles.comments}>
             <div className={styles.author}>
               <div>
@@ -186,12 +143,7 @@ export const PostModal: React.FC<PostModalProps> = ({
             <div className={styles.footer}>
               <div className={styles.footerActions}>
                 <div className={styles.footerButtons}>
-                  <button
-                    onClick={
-                      isLiked
-                        ? dislikePost(postId, String(currentUser))
-                        : likePost(postId, String(currentUser))
-                    }>
+                  <button onClick={likePost(postId, String(currentUser))}>
                     <img src={isLiked ? heartFill : heart} alt="like" />
                   </button>
 
@@ -219,7 +171,7 @@ export const PostModal: React.FC<PostModalProps> = ({
                   value={text}
                   onChange={onTextChange}
                 />
-                <button onClick={postComment} disabled={!text}>
+                <button onClick={onPostComment} disabled={!text}>
                   Post
                 </button>
               </div>
