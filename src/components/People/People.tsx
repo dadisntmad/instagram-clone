@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { auth } from '../../firebase';
 import { fetchUsers } from '../../redux/actions/user';
 import { useAppDispatch } from '../../redux/store';
-import { selectUser } from '../../selectors/selectors';
+import { selectPost, selectUser } from '../../selectors/selectors';
 import { ProfileImage } from '../ProfileImage/ProfileImage';
 import { followUnfollow } from '../../utils/methods';
 
@@ -14,6 +14,7 @@ export const People: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const { users } = useSelector(selectUser);
+  const { posts } = useSelector(selectPost);
 
   const currentUser = auth.currentUser?.uid;
 
@@ -25,22 +26,23 @@ export const People: React.FC = () => {
     <div className={styles.root}>
       <h4>Suggested</h4>
       <div className={styles.content}>
-        {users.map((user) => (
-          <div className={styles.user} key={user.uid}>
-            <Link to={`/${user.uid}`}>
-              <div className={styles.userContent}>
-                <ProfileImage size={45} imageUrl={user.imageUrl} />
-                <div>
-                  <p className={styles.username}>{user.username}</p>
-                  <p className={styles.name}>{user.fullName}</p>
+        {users &&
+          users.map((user) => (
+            <div className={styles.user} key={user.uid}>
+              <Link to={`/${user.uid}`}>
+                <div className={styles.userContent}>
+                  <ProfileImage size={45} imageUrl={user.imageUrl} />
+                  <div>
+                    <p className={styles.username}>{user.username}</p>
+                    <p className={styles.name}>{user.fullName}</p>
+                  </div>
                 </div>
-              </div>
-            </Link>
-            <button onClick={() => followUnfollow(String(currentUser), user.uid)}>
-              {user.isFollowing ? 'Unfollow' : 'Follow'}
-            </button>
-          </div>
-        ))}
+              </Link>
+              <button onClick={() => followUnfollow(String(currentUser), user.uid, posts)}>
+                {user.isFollowing ? 'Unfollow' : 'Follow'}
+              </button>
+            </div>
+          ))}
       </div>
     </div>
   );

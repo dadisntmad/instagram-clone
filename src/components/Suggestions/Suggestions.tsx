@@ -5,7 +5,7 @@ import { useAppDispatch } from '../../redux/store';
 import { auth } from '../../firebase';
 import { fetchUser, fetchUsers } from '../../redux/actions/user';
 import { useSelector } from 'react-redux';
-import { selectUser } from '../../selectors/selectors';
+import { selectPost, selectUser } from '../../selectors/selectors';
 import { followUnfollow } from '../../utils/methods';
 
 import styles from './Suggestions.module.scss';
@@ -14,6 +14,7 @@ export const Suggestions: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const { user, users } = useSelector(selectUser);
+  const { posts } = useSelector(selectPost);
 
   const currentUser = auth.currentUser?.uid;
 
@@ -49,22 +50,23 @@ export const Suggestions: React.FC = () => {
           <button>See All</button>
         </Link>
       </div>
-      {users.slice(0, 5).map((user) => (
-        <div className={styles.user} key={user.uid}>
-          <Link to={`/${user.uid}`}>
-            <div className={styles.userContent}>
-              <ProfileImage size={40} imageUrl={user.imageUrl} />
-              <div>
-                <p className={styles.username}>{user.username}</p>
-                <p className={styles.name}>{user.fullName}</p>
+      {users &&
+        users.slice(0, 5).map((user) => (
+          <div className={styles.user} key={user.uid}>
+            <Link to={`/${user.uid}`}>
+              <div className={styles.userContent}>
+                <ProfileImage size={40} imageUrl={user.imageUrl} />
+                <div>
+                  <p className={styles.username}>{user.username}</p>
+                  <p className={styles.name}>{user.fullName}</p>
+                </div>
               </div>
-            </div>
-          </Link>
-          <button onClick={() => followUnfollow(String(currentUser), user.uid)}>
-            {user.isFollowing ? 'Unfollow' : 'Follow'}
-          </button>
-        </div>
-      ))}
+            </Link>
+            <button onClick={() => followUnfollow(String(currentUser), user.uid, posts)}>
+              {user.isFollowing ? 'Unfollow' : 'Follow'}
+            </button>
+          </div>
+        ))}
     </div>
   );
 };

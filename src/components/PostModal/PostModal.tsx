@@ -128,16 +128,17 @@ export const PostModal: React.FC<PostModalProps> = ({
                 <div>{description}</div>
               </div>
               <div className={styles.commentsBlock}>
-                {comments.map((comment) => (
-                  <div className={styles.userComment} key={comment.commentId}>
-                    <div className={styles.userData}>
-                      <ProfileImage size={35} imageUrl={comment.profilePic} />
-                      <p>{comment.name}</p>
-                      <div>{comment.text}</div>
+                {comments &&
+                  comments.map((comment) => (
+                    <div className={styles.userComment} key={comment.commentId}>
+                      <div className={styles.userData}>
+                        <ProfileImage size={35} imageUrl={comment.profilePic} />
+                        <p>{comment.name}</p>
+                        <div>{comment.text}</div>
+                      </div>
+                      <span>{moment(comment.datePublished.seconds * 1000).format('MMMM D')}</span>
                     </div>
-                    <span>{moment(comment.datePublished.seconds * 1000).format('MMMM D')}</span>
-                  </div>
-                ))}
+                  ))}
               </div>
             </div>
             <div className={styles.footer}>

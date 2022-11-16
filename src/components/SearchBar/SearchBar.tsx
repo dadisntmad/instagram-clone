@@ -79,12 +79,13 @@ export const SearchBar: React.FC = () => {
       </div>
       {searchValue && (
         <div className={styles.modal} ref={modalRef}>
-          {searchingUsers.map((user) => (
-            <div className={styles.user} key={user.uid} onClick={onNavigateToUser(user.uid)}>
-              <ProfileImage size={45} imageUrl={user.imageUrl} />
-              <p>{user.username}</p>
-            </div>
-          ))}
+          {searchingUsers &&
+            searchingUsers.map((user) => (
+              <div className={styles.user} key={user.uid} onClick={onNavigateToUser(user.uid)}>
+                <ProfileImage size={45} imageUrl={user.imageUrl} />
+                <p>{user.username}</p>
+              </div>
+            ))}
         </div>
       )}
     </>

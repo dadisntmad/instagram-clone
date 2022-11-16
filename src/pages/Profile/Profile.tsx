@@ -79,9 +79,7 @@ const Profile: React.FC = () => {
           </div>
         </div>
         <div className={styles.posts}>
-          {posts.map((post) => (
-            <UserPost key={post.postId} {...post} />
-          ))}
+          {posts && posts.map((post) => <UserPost key={post.postId} {...post} />)}
         </div>
       </div>
     </div>
