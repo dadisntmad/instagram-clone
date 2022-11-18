@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../redux/store';
 import { useSelector } from 'react-redux';
@@ -6,6 +6,7 @@ import { selectAuth } from '../../selectors/selectors';
 import { setEmail, setFullName, setPassword, setUsername } from '../../redux/slices/auth';
 import { auth, db } from '../../firebase';
 import { User } from '../../types/user';
+import { RotatingLines } from 'react-loader-spinner';
 import cn from 'classnames';
 
 import logo from '../../assets/logo.png';
@@ -15,6 +16,8 @@ import styles from './SignUp.module.scss';
 const SignUp: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const { email, fullName, username, password } = useSelector(selectAuth);
 
@@ -37,6 +40,7 @@ const SignUp: React.FC = () => {
   };
 
   const signUp = () => {
+    setIsLoading(true);
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((userCredential) => {
@@ -53,6 +57,7 @@ const SignUp: React.FC = () => {
 
         db.collection('users').doc(userCredential.user?.uid).set(data);
         navigate('/');
+        setIsLoading(false);
         dispatch(setEmail(''));
         dispatch(setFullName(''));
         dispatch(setUsername(''));
@@ -110,10 +115,21 @@ const SignUp: React.FC = () => {
             <button
               className={cn(styles.formButton, {
                 [styles.disabled]: !isValid,
+                [styles.disabled]: isLoading,
               })}
               disabled={!isValid}
               onClick={signUp}>
-              Sign up
+              {isLoading ? (
+                <RotatingLines
+                  strokeColor="white"
+                  strokeWidth="3"
+                  animationDuration="0.75"
+                  width="22"
+                  visible={true}
+                />
+              ) : (
+                'Sign up'
+              )}
             </button>
           </div>
         </div>

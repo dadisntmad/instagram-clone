@@ -9,3 +9,8 @@ export * from './Reels/Reels';
 export * from './SearchBar/SearchBar';
 export * from './Suggestions/Suggestions';
 export * from './UserPost/UserPost';
+export * from './Loaders/PostLoader';
+export * from './Loaders/ProfileLoader';
+export * from './Loaders/ReelsLoader';
+export * from './Loaders/SuggestionsLoader';
+export * from './Loaders/UserPostLoader';

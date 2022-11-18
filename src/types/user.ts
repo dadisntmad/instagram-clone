@@ -2,6 +2,7 @@ export type UserSliceState = {
   user: User;
   users: User[];
   searchingUsers: User[];
+  isUserLoading: boolean;
 };
 
 export type User = {

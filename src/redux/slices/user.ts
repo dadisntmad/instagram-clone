@@ -5,6 +5,7 @@ const initialState: UserSliceState = {
   user: {} as User,
   users: [],
   searchingUsers: [],
+  isUserLoading: false,
 };
 
 const userSlice = createSlice({
@@ -13,6 +14,7 @@ const userSlice = createSlice({
   reducers: {
     setUser(state, action: PayloadAction<User>) {
       state.user = action.payload;
+      state.isUserLoading = false;
     },
     setUsers(state, action: PayloadAction<User[]>) {
       state.users = action.payload;
@@ -20,9 +22,12 @@ const userSlice = createSlice({
     setSearchingUsers(state, action: PayloadAction<User[]>) {
       state.searchingUsers = action.payload;
     },
+    setIsUserLoading(state) {
+      state.isUserLoading = true;
+    },
   },
 });
 
-export const { setUser, setUsers, setSearchingUsers } = userSlice.actions;
+export const { setUser, setUsers, setSearchingUsers, setIsUserLoading } = userSlice.actions;
 
 export default userSlice.reducer;

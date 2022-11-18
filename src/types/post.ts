@@ -1,6 +1,7 @@
 export type PostSliceState = {
   posts: Post[];
   userFollowingPosts: Post[];
+  isPostLoading: boolean;
 };
 
 export type Post = {
