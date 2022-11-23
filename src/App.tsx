@@ -1,6 +1,6 @@
 import { useEffect, lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { Home, Messages, Explore, AddPost, EditAccount } from './pages';
+import { Home, Explore, AddPost, EditAccount } from './pages';
 import { Header, People } from './components';
 import { auth } from './firebase';
 import { useAppDispatch } from './redux/store';
@@ -12,6 +12,7 @@ const SignUp = lazy(() => import('./pages/SignUp/SignUp'));
 const SignIn = lazy(() => import('./pages/SignIn/SignIn'));
 const Profile = lazy(() => import('./pages/Profile/Profile'));
 const NotFound = lazy(() => import('./components/NotFound/NotFound'));
+const Messages = lazy(() => import('./pages/Messages/Messages'));
 
 function App() {
   const dispatch = useAppDispatch();
@@ -38,7 +39,8 @@ function App() {
           <Route path="/" element={isLoggedIn ? <Home /> : <SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/:id" element={<Profile />} />
-          <Route path="/direct/inbox" element={<Messages />} />
+          <Route path="/direct/inbox/" element={<Messages />} />
+          <Route path="/direct/inbox/:dialogId" element={<Messages />} />
           <Route path="/explore/people" element={<People />} />
           <Route path="/explore" element={<Explore />} />
           <Route path="/new-post" element={<AddPost />} />

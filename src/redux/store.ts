@@ -4,6 +4,7 @@ import authSlice from './slices/auth';
 import userSlice from './slices/user';
 import postSlice from './slices/post';
 import commentSlice from './slices/comment';
+import messageSlice from './slices/message';
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
     user: userSlice,
     post: postSlice,
     comment: commentSlice,
+    message: messageSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

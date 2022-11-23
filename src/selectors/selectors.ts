@@ -11,3 +11,6 @@ export const selectPost = (state: RootState) => state.post;
 
 // comment slice
 export const selectComment = (state: RootState) => state.comment;
+
+// message slice
+export const selectMessage = (state: RootState) => state.message;

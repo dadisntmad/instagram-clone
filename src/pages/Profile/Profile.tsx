@@ -1,20 +1,25 @@
-import React, { useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ProfileImage, ProfileLoader, UserPost, UserPostLoader } from '../../components';
 import { useAppDispatch } from '../../redux/store';
 import { useSelector } from 'react-redux';
 import { selectPost, selectUser } from '../../selectors/selectors';
-import { auth } from '../../firebase';
+import { auth, db } from '../../firebase';
 import { fetchUser } from '../../redux/actions/user';
 import { fetchUserPosts } from '../../redux/actions/post';
 import { followUnfollow } from '../../utils/methods';
 import { setIsUserLoading } from '../../redux/slices/user';
 import { setIsPostLoading } from '../../redux/slices/post';
+import { v4 as uuidv4 } from 'uuid';
+import { User } from '../../types/user';
 
 import styles from './Profile.module.scss';
 
 const Profile: React.FC = () => {
   const dispatch = useAppDispatch();
+  const [loggedInUser, setLoggedInUser] = useState<User>();
+
+  const navigate = useNavigate();
 
   const { id } = useParams();
 
@@ -22,6 +27,26 @@ const Profile: React.FC = () => {
   const { posts, isPostLoading } = useSelector(selectPost);
 
   const currentUser = auth.currentUser?.uid;
+  const dialogId = uuidv4();
+
+  const getLoggedInUser = async () => {
+    await db
+      .collection('users')
+      .doc(currentUser)
+      .get()
+      .then((doc) => {
+        setLoggedInUser({
+          uid: doc.data()?.uid,
+          email: doc.data()?.email,
+          fullName: doc.data()?.fullName,
+          username: doc.data()?.username,
+          imageUrl: doc.data()?.imageUrl,
+          isFollowing: doc.data()?.isFollowing,
+          following: doc.data()?.following,
+          followers: doc.data()?.followers,
+        });
+      });
+  };
 
   const fetchUserData = () => {
     if (id !== currentUser) {
@@ -37,11 +62,36 @@ const Profile: React.FC = () => {
     dispatch(setIsUserLoading());
     dispatch(setIsPostLoading());
     fetchUserData();
+    getLoggedInUser();
   }, [id]);
 
   const followUnfollowUser = (uid: string, followId: string) => async () => {
     await followUnfollow(uid, followId, posts);
     fetchUserData();
+  };
+
+  const onCreateDialog = async () => {
+    const receiver = {
+      uid: id,
+      username: user.username,
+      imageUrl: user?.imageUrl,
+    };
+
+    const sender = {
+      uid: loggedInUser?.uid,
+      username: loggedInUser?.username,
+      imageUrl: loggedInUser?.imageUrl,
+    };
+
+    const data = {
+      dialogId,
+      createdOn: new Date(),
+      receiver,
+      sender,
+    };
+
+    await db.collection('dialogs').doc(dialogId).set(data);
+    navigate('/direct/inbox');
   };
 
   return (
@@ -61,7 +111,9 @@ const Profile: React.FC = () => {
                   </Link>
                 ) : (
                   <div className={styles.profileContentButtons}>
-                    <button className={styles.profileContentButton}>Message</button>
+                    <button className={styles.profileContentButton} onClick={onCreateDialog}>
+                      Message
+                    </button>
                     <button
                       className={styles.profileContentFollow}
                       onClick={followUnfollowUser(String(currentUser), user.uid)}>
