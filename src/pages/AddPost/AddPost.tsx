@@ -1,13 +1,17 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { ProfileImage } from '../../components';
+
 import { useNavigate } from 'react-router-dom';
-import firebase from 'firebase/app';
-import { auth, db, storage } from '../../firebase';
-import { v4 as uuidv4 } from 'uuid';
-import { useAppDispatch } from '../../redux/store';
 import { useSelector } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
+import firebase from 'firebase/app';
+
+import { auth, db, storage } from '../../firebase';
+import { useAppDispatch } from '../../redux/store';
+
 import { fetchUser } from '../../redux/actions/user';
+
 import { selectUser } from '../../selectors/selectors';
+import { ProfileImage } from '../../components';
 
 import picture from '../../assets/picture.png';
 

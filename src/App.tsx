@@ -1,12 +1,16 @@
 import { useEffect, lazy, Suspense } from 'react';
+
 import { Routes, Route } from 'react-router-dom';
+import { useAppDispatch } from './redux/store';
+import { useSelector } from 'react-redux';
+
+import { auth } from './firebase';
+
+import { setIsLoggedIn } from './redux/slices/auth';
+import { selectAuth } from './selectors/selectors';
+
 import { Home, Explore, AddPost, EditAccount } from './pages';
 import { Header, People } from './components';
-import { auth } from './firebase';
-import { useAppDispatch } from './redux/store';
-import { setIsLoggedIn } from './redux/slices/auth';
-import { useSelector } from 'react-redux';
-import { selectAuth } from './selectors/selectors';
 
 const SignUp = lazy(() => import('./pages/SignUp/SignUp'));
 const SignIn = lazy(() => import('./pages/SignIn/SignIn'));

@@ -1,12 +1,16 @@
 import React, { useEffect } from 'react';
-import { ProfileImage } from '../ProfileImage/ProfileImage';
+
 import { Link } from 'react-router-dom';
-import { useAppDispatch } from '../../redux/store';
-import { auth } from '../../firebase';
-import { fetchUser, fetchUsers } from '../../redux/actions/user';
 import { useSelector } from 'react-redux';
-import { selectPost, selectUser } from '../../selectors/selectors';
+
 import { followUnfollow } from '../../utils/methods';
+import { auth } from '../../firebase';
+import { useAppDispatch } from '../../redux/store';
+
+import { fetchUser, fetchUsers } from '../../redux/actions/user';
+
+import { selectPost, selectUser } from '../../selectors/selectors';
+import { ProfileImage } from '../ProfileImage/ProfileImage';
 
 import styles from './Suggestions.module.scss';
 

@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { MenuModal } from '../MenuModal/MenuModal';
-import { ProfileImage } from '../ProfileImage/ProfileImage';
-import { FirestoreDate } from '../../types/post';
-import { useSelector } from 'react-redux';
-import { selectComment, selectUser } from '../../selectors/selectors';
-import { useAppDispatch } from '../../redux/store';
+
+import moment from 'moment';
+import { v4 as uuidv4 } from 'uuid';
+
+import { likePost, postComment } from '../../utils/methods';
 import { auth } from '../../firebase';
+
+import { useAppDispatch } from '../../redux/store';
 import { fetchComments } from '../../redux/actions/comment';
 import { setText } from '../../redux/slices/comment';
-import { v4 as uuidv4 } from 'uuid';
-import { likePost, postComment } from '../../utils/methods';
-import moment from 'moment';
+
+import { useSelector } from 'react-redux';
+import { selectComment, selectUser } from '../../selectors/selectors';
+
+import { FirestoreDate } from '../../types/post';
+
+import { MenuModal } from '../MenuModal/MenuModal';
+import { ProfileImage } from '../ProfileImage/ProfileImage';
 
 import dots from '../../assets/dots.png';
 import heart from '../../assets/heart.png';

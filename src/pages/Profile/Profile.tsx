@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from 'react';
+
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ProfileImage, ProfileLoader, UserPost, UserPostLoader } from '../../components';
-import { useAppDispatch } from '../../redux/store';
+import { v4 as uuidv4 } from 'uuid';
 import { useSelector } from 'react-redux';
-import { selectPost, selectUser } from '../../selectors/selectors';
+import { useAppDispatch } from '../../redux/store';
+
+import { followUnfollow } from '../../utils/methods';
 import { auth, db } from '../../firebase';
+
 import { fetchUser } from '../../redux/actions/user';
 import { fetchUserPosts } from '../../redux/actions/post';
-import { followUnfollow } from '../../utils/methods';
+
+import { selectPost, selectUser } from '../../selectors/selectors';
 import { setIsUserLoading } from '../../redux/slices/user';
 import { setIsPostLoading } from '../../redux/slices/post';
-import { v4 as uuidv4 } from 'uuid';
+
 import { User } from '../../types/user';
+import { ProfileImage, ProfileLoader, UserPost, UserPostLoader } from '../../components';
 
 import styles from './Profile.module.scss';
 
@@ -88,6 +93,7 @@ const Profile: React.FC = () => {
       createdOn: new Date(),
       receiver,
       sender,
+      participants: [loggedInUser?.uid, id],
     };
 
     await db.collection('dialogs').doc(dialogId).set(data);

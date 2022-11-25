@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
+
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { ProfileImage } from '../../components';
-import { useAppDispatch } from '../../redux/store';
 import { useSelector } from 'react-redux';
-import { selectMessage, selectUser } from '../../selectors/selectors';
-import { fetchDialogs, fetchMessages } from '../../redux/actions/message';
-import { auth, db } from '../../firebase';
-import { fetchUser } from '../../redux/actions/user';
-import { Message, Participant } from '../../types/messages';
 import cn from 'classnames';
+
+import { useAppDispatch } from '../../redux/store';
+import { auth, db } from '../../firebase';
+
+import { fetchUser } from '../../redux/actions/user';
+import { fetchDialogs, fetchMessages } from '../../redux/actions/message';
+
+import { Message, Participant } from '../../types/messages';
+
+import { selectMessage, selectUser } from '../../selectors/selectors';
+import { ProfileImage } from '../../components';
 
 import send from '../../assets/send.png';
 import smiley from '../../assets/smiley.png';
@@ -131,7 +136,7 @@ const Messages: React.FC = () => {
                         </div>
                       ) : (
                         <div className={styles.received}>
-                          <ProfileImage size={25} imageUrl={message.receivedMessage.imageUrl} />
+                          <ProfileImage size={25} imageUrl={message.sendMessage.imageUrl} />
                           <p>{message.receivedMessage.message}</p>
                         </div>
                       )}

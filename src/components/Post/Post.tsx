@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
-import { ProfileImage } from '../ProfileImage/ProfileImage';
-import { FirestoreDate } from '../../types/post';
+
 import { Link } from 'react-router-dom';
+import moment from 'moment';
+import { v4 as uuidv4 } from 'uuid';
+
 import { likePost, postComment } from '../../utils/methods';
 import { auth } from '../../firebase';
+
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../selectors/selectors';
-import { v4 as uuidv4 } from 'uuid';
-import moment from 'moment';
+
+import { FirestoreDate } from '../../types/post';
+
+import { ProfileImage } from '../ProfileImage/ProfileImage';
 
 import dots from '../../assets/dots.png';
 import heart from '../../assets/heart.png';

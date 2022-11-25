@@ -1,11 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
+
 import { useNavigate } from 'react-router-dom';
-import { ProfileImage } from '../../components';
 import { useSelector } from 'react-redux';
+
 import { auth, db, storage } from '../../firebase';
-import { fetchUser } from '../../redux/actions/user';
 import { useAppDispatch } from '../../redux/store';
+
+import { fetchUser } from '../../redux/actions/user';
+
 import { selectUser } from '../../selectors/selectors';
+import { ProfileImage } from '../../components';
 
 import styles from './EditAccount.module.scss';
 

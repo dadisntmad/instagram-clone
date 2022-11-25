@@ -6,18 +6,21 @@ export const fetchDialogs = createAsyncThunk(
   'message/fetchDialogs',
   async (uid: string, thunkAPI) => {
     try {
-      db.collection('dialogs').onSnapshot((snap) => {
-        thunkAPI.dispatch(
-          setDialogs(
-            snap.docs.map((doc) => ({
-              dialogId: doc.data().dialogId,
-              createdOn: doc.data().createdOn,
-              sender: doc.data().sender,
-              receiver: doc.data().receiver,
-            })),
-          ),
-        );
-      });
+      db.collection('dialogs')
+        .where('participants', 'array-contains', uid)
+        .onSnapshot((snap) => {
+          thunkAPI.dispatch(
+            setDialogs(
+              snap.docs.map((doc) => ({
+                dialogId: doc.data().dialogId,
+                createdOn: doc.data().createdOn,
+                sender: doc.data().sender,
+                receiver: doc.data().receiver,
+                participants: doc.data().participants,
+              })),
+            ),
+          );
+        });
     } catch (error) {
       console.log(error);
     }

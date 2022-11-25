@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
+
 import { Link } from 'react-router-dom';
-import { useAppDispatch } from '../../redux/store';
 import { useSelector } from 'react-redux';
-import { selectAuth } from '../../selectors/selectors';
-import { setEmail, setPassword } from '../../redux/slices/auth';
-import { auth } from '../../firebase';
 import { RotatingLines } from 'react-loader-spinner';
 import cn from 'classnames';
+
+import { auth } from '../../firebase';
+
+import { useAppDispatch } from '../../redux/store';
+
+import { selectAuth } from '../../selectors/selectors';
+import { setEmail, setPassword } from '../../redux/slices/auth';
 
 import logo from '../../assets/logo.png';
 

@@ -10,6 +10,7 @@ export type Dialog = {
   receiver: Participant;
   sender: Participant;
   createdOn: FirestoreDate;
+  participants: string[];
 };
 
 export type Message = {

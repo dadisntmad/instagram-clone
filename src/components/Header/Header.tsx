@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { SearchBar } from '../SearchBar/SearchBar';
+
 import { Link } from 'react-router-dom';
+
 import { auth } from '../../firebase';
+
+import { SearchBar } from '../SearchBar/SearchBar';
 
 import logo from '../../assets/logo.png';
 import home from '../../assets/home.png';

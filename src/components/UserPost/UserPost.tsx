@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
+
 import { auth } from '../../firebase';
+
 import { fetchUser } from '../../redux/actions/user';
+
 import { useAppDispatch } from '../../redux/store';
 import { FirestoreDate } from '../../types/post';
+
 import { PostModal } from '../PostModal/PostModal';
 
 import styles from './UserPost.module.scss';

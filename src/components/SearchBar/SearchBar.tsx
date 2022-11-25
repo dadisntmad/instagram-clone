@@ -1,9 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+
 import { fetchSearchingUsers } from '../../redux/actions/user';
 import { useAppDispatch } from '../../redux/store';
 import { selectUser } from '../../selectors/selectors';
+
 import { ProfileImage } from '../ProfileImage/ProfileImage';
 
 import styles from './SearchBar.module.scss';

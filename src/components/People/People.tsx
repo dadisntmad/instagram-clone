@@ -1,12 +1,16 @@
 import React, { useEffect } from 'react';
+
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { auth } from '../../firebase';
-import { fetchUsers } from '../../redux/actions/user';
 import { useAppDispatch } from '../../redux/store';
-import { selectPost, selectUser } from '../../selectors/selectors';
-import { ProfileImage } from '../ProfileImage/ProfileImage';
+
 import { followUnfollow } from '../../utils/methods';
+import { auth } from '../../firebase';
+
+import { fetchUsers } from '../../redux/actions/user';
+import { selectPost, selectUser } from '../../selectors/selectors';
+
+import { ProfileImage } from '../ProfileImage/ProfileImage';
 
 import styles from './People.module.scss';
 
